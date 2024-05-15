@@ -15,7 +15,7 @@ import {
   onAuthStateChanged,
   signOut,
 } from "@firebase/auth";
-import React = require("react");
+import React from "react";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAebuVJZ3pCXOhmc1vlkhz24kORBCChvQ8",
