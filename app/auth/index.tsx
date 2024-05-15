@@ -31,6 +31,16 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+interface InputAuthProps{
+  email: string,
+  setEmail: (email: string) => void,
+  password: string,
+  setPassword: (password: string) => void,
+  isLogin: boolean,
+  setIsLogin: (isLogin: boolean) => void,
+  handleAuthentication: () => void
+}
+
 const AuthScreen = ({
   email,
   setEmail,
@@ -39,7 +49,7 @@ const AuthScreen = ({
   isLogin,
   setIsLogin,
   handleAuthentication,
-}) => {
+}: InputAuthProps) => {
   return (
     <View style={styles.authContainer}>
       <Text style={styles.title}>{isLogin ? "Sign In" : "Sign Up"}</Text>
@@ -87,11 +97,12 @@ const AuthenticatedScreen = ({ user, handleAuthentication }) => {
   );
 };
 
+const [email, setEmail] = useState("");
+const [password, setPassword] = useState("");
+const [user, setUser] = useState(null); // Track user authentication state
+const [isLogin, setIsLogin] = useState(true);
+
 const Auth = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null); // Track user authentication state
-  const [isLogin, setIsLogin] = useState(true);
 
   const auth = getAuth(app);
   useEffect(() => {
