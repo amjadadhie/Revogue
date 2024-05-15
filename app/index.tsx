@@ -1,58 +1,73 @@
-import { Text, View, StyleSheet } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  ImageBackground,
+  Button,
+  Image,
+} from "react-native";
 import React from "react";
+import { Link } from "expo-router";
 
 const HomePage = () => {
   return (
-    <View>
-      <Text>hello world</Text>
-    </View>
+    <ImageBackground
+      source={require("../assets/home/image 1.png")} // Replace with your image path
+      style={styles.background}
+    >
+      <View style={styles.container}>
+        <Image
+          source={require("../assets/home/AppIcon.png")} // Replace with your image path
+          style={styles.Image}
+        />
+        <Text style={styles.title}>
+          <Text style={styles.whiteText}>Empower Your</Text> Style{" "}
+          <Text style={styles.whiteText}>Embrace</Text> Sustainability
+        </Text>
+
+        <View style={styles.buttonContainer}>
+          <Link href={"/about"}>Sign Up With Email</Link>
+        </View>
+      </View>
+    </ImageBackground>
   );
 };
 
 export default HomePage;
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
+  background: {
+    flex: 1,
+    resizeMode: "cover", // or "stretch"
     justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-    backgroundColor: "#f0f0f0",
   },
-  authContainer: {
-    width: "80%",
-    maxWidth: 400,
-    backgroundColor: "#fff",
-    padding: 16,
-    borderRadius: 8,
-    elevation: 3,
+  container: {
+    alignItems: "center",
+  },
+  Image: {
+    justifyContent: "center",
   },
   title: {
-    fontSize: 24,
+    fontSize: 14,
     marginBottom: 16,
+    marginTop: 16,
     textAlign: "center",
+    width: "69%",
+    lineHeight: 20,
+    color: "#000", // Default color for the text
   },
-  input: {
-    height: 40,
-    borderColor: "#ddd",
-    borderWidth: 1,
-    marginBottom: 16,
-    padding: 8,
-    borderRadius: 4,
+  whiteText: {
+    color: "#fff", // White color for specific parts of the text
   },
   buttonContainer: {
-    marginBottom: 16,
-  },
-  toggleText: {
-    color: "#3498db",
-    textAlign: "center",
-  },
-  bottomContainer: {
     marginTop: 20,
-  },
-  emailText: {
-    fontSize: 18,
-    textAlign: "center",
-    marginBottom: 20,
+    width: "80%",
+    paddingTop: 8,
+    paddingBottom: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#2B2A2A",
+    color: "#fff",
+    
   },
 });
