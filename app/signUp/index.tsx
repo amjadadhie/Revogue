@@ -57,9 +57,9 @@ interface InputSignUpProps{
   }: InputSignUpProps) => {
     return (
         // START CODE HERE
-
+      <View></View>
         // END CODE HERE
-    )
+    );
 }
 
 
