@@ -32,34 +32,36 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-interface InputSignUpProps{
-    email: string,
-    setEmail: (email: string) => void,
-    username: string,
-    setUsername: (username: string) => void,
-    password: string,
-    setPassword: (password: string) => void,
-    isLogin: boolean,
-    setIsLogin: (isLogin: boolean) => void,
-    handleAuthentication: () => void
-  }
-  
-  const SignUp = ({
-    email,
-    setEmail,
-    username,
-    setUsername,
-    password,
-    setPassword,
-    isLogin,
-    setIsLogin,
-    handleAuthentication,
-  }: InputSignUpProps) => {
-    return (
-        // START CODE HERE
-      <View></View>
-        // END CODE HERE
-    );
+interface InputSignUpProps {
+  email: string;
+  setEmail: (email: string) => void;
+  username: string;
+  setUsername: (username: string) => void;
+  password: string;
+  setPassword: (password: string) => void;
+  isLogin: boolean;
+  setIsLogin: (isLogin: boolean) => void;
+  handleAuthentication: () => void;
 }
 
+const SignUp = ({
+  email,
+  setEmail,
+  username,
+  setUsername,
+  password,
+  setPassword,
+  isLogin,
+  setIsLogin,
+  handleAuthentication,
+}: InputSignUpProps) => {
+  return (
+    // START CODE HERE
+    <View>
+      <Text>Memek</Text>
+    </View>
+    // END CODE HERE
+  );
+};
 
+export default SignUp;

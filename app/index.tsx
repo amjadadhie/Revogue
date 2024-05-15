@@ -10,7 +10,7 @@ import React from "react";
 import { Link } from "expo-router";
 import Icon from "react-native-vector-icons/FontAwesome"; // Import the Icon component
 
-const HomePage = () => {
+const LandingPage = () => {
   return (
     <ImageBackground
       source={require("../assets/home/image 1.png")} // Replace with your image path
@@ -28,7 +28,7 @@ const HomePage = () => {
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        <Link href={"/signIn"} style={styles.link}>
+        <Link href={"/signUp"} style={styles.link}>
           {/* <Icon name="envelope" size={16} color="#fff" style={styles.icon} /> */}
           <Text>Sign Up With Email</Text>
         </Link>
@@ -43,7 +43,7 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default LandingPage;
 
 const styles = StyleSheet.create({
   background: {
