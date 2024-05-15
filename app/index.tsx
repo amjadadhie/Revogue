@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import React from "react";
 import { Link } from "expo-router";
+import Icon from "react-native-vector-icons/FontAwesome"; // Import the Icon component
 
 const HomePage = () => {
   return (
@@ -16,18 +17,27 @@ const HomePage = () => {
       style={styles.background}
     >
       <View style={styles.container}>
-        <Image
-          source={require("../assets/home/AppIcon.png")} // Replace with your image path
-          style={styles.Image}
-        />
-        <Text style={styles.title}>
-          <Text style={styles.whiteText}>Empower Your</Text> Style{" "}
-          <Text style={styles.whiteText}>Embrace</Text> Sustainability
-        </Text>
-
-        <View style={styles.buttonContainer}>
-          <Link href={"/about"}>Sign Up With Email</Link>
+        <View style={styles.centeredContent}>
+          <Image
+            source={require("../assets/home/AppIcon.png")} // Replace with your image path
+          />
+          <Text style={styles.title}>
+            <Text style={styles.whiteText}>Empower Your</Text> Style{" "}
+            <Text style={styles.whiteText}>Embrace</Text> Sustainability
+          </Text>
         </View>
+      </View>
+      <View style={styles.buttonContainer}>
+        <Link href={"/signIn"} style={styles.link}>
+          {/* <Icon name="envelope" size={16} color="#fff" style={styles.icon} /> */}
+          <Text>Sign Up With Email</Text>
+        </Link>
+        <Text style={styles.signInText}>
+          Already have an account?{" "}
+          <Link href={"/signIn"} style={styles.signInLink}>
+            Sign In
+          </Link>
+        </Text>
       </View>
     </ImageBackground>
   );
@@ -39,12 +49,13 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     resizeMode: "cover", // or "stretch"
-    justifyContent: "center",
   },
   container: {
-    alignItems: "center",
+    flex: 1,
+    justifyContent: "center", // Center the content vertically
   },
-  Image: {
+  centeredContent: {
+    alignItems: "center",
     justifyContent: "center",
   },
   title: {
@@ -60,14 +71,30 @@ const styles = StyleSheet.create({
     color: "#fff", // White color for specific parts of the text
   },
   buttonContainer: {
-    marginTop: 20,
-    width: "80%",
-    paddingTop: 8,
-    paddingBottom: 10,
-    justifyContent: "center",
-    alignItems: "center",
+    paddingBottom: 40, // Add padding to push the button to the bottom
+    paddingHorizontal: 20,
+    width: "100%", // Make the button span the full width
+    position: "absolute", // Position the button at the bottom
+    bottom: 40, // Position the button at the bottom
+  },
+  link: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     backgroundColor: "#2B2A2A",
     color: "#fff",
-    
+    textAlign: "center",
+    borderRadius: 20, // Apply rounded corners
+  },
+  icon: {
+    marginRight: 100, // Add space between icon and text
+  },
+  signInText: {
+    color: "#fff", // White color for the text
+    textAlign: "center",
+    marginTop: 20,
+  },
+  signInLink: {
+    color: "#000", // Black color for the link
+    textDecorationLine: "underline", // Underline the link
   },
 });
