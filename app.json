@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "Revogue1",
-    "slug": "Revogue1",
+    "name": "Revogue",
+    "slug": "Revogue",
+    "scheme": "Revogue",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,10 +22,9 @@
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
     },
-    "plugins": [
-      "expo-router"
-    ]
+    "plugins": ["expo-router"]
   }
 }
