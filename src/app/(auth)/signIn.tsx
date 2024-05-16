@@ -14,7 +14,7 @@ import {
 import { initializeApp } from "@firebase/app";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 
 const signIn = () => {
   const [email, setEmail] = useState("");
@@ -30,6 +30,7 @@ const signIn = () => {
       const user = userCredential.user;
       if (user) {
         Alert.alert("Login Successful", `Welcome back, ${user.email}!`);
+        router.push("/Home");
         // Disini Anda dapat menggunakan user.email untuk mendapatkan alamat email pengguna yang sedang login
       } else {
         Alert.alert("Login Failed", "Failed to get user information");
