@@ -89,7 +89,7 @@ const SignUp = () => {
         </Pressable>
 
         <Text style={styles.signInText}>
-          Already have an account?
+          Already have an account?{" "}
           <Link href={"/signIn"} style={styles.signInLink}>
             Sign In
           </Link>

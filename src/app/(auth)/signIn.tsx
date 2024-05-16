@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { fs, app, auth  } from '../../constants/firebaseConfig'; // Import konfigurasi Firestore
-import { signInWithEmailAndPassword } from "@firebase/auth"
+import { fs, app, auth } from "../../constants/firebaseConfig"; // Import konfigurasi Firestore
+import { signInWithEmailAndPassword } from "@firebase/auth";
 import {
   View,
   Text,
@@ -9,99 +9,133 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
+  Pressable,
 } from "react-native";
 import { initializeApp } from "@firebase/app";
 import React from "react";
+import { LinearGradient } from "expo-linear-gradient";
+import { Link } from "expo-router";
 
 const signIn = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
       if (user) {
-        Alert.alert('Login Successful', `Welcome back, ${user.email}!`);
+        Alert.alert("Login Successful", `Welcome back, ${user.email}!`);
         // Disini Anda dapat menggunakan user.email untuk mendapatkan alamat email pengguna yang sedang login
       } else {
-        Alert.alert('Login Failed', 'Failed to get user information');
+        Alert.alert("Login Failed", "Failed to get user information");
       }
     } catch (error) {
-      Alert.alert('Login Failed');
+      Alert.alert("Login Failed");
     }
   };
 
   return (
-    <View>
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Button title="Login" onPress={handleLogin} />
-    </View>
+    <LinearGradient
+      colors={["#FFFFFF", "#6E6D6D"]}
+      style={styles.background}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1.2 }}
+    >
+      <View style={styles.container}>
+        <Text style={styles.title}>Sign In Into Your Account</Text>
+      </View>
+      <View style={styles.inputContainer}>
+        <TextInput
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          style={styles.input}
+          secureTextEntry
+        />
+      </View>
+      <View style={styles.buttonContainer}>
+        <Pressable style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Sign In</Text>
+        </Pressable>
+
+        <Text style={styles.signInText}>
+          Doesn't have an account?{" "}
+          <Link href={"/signUp"} style={styles.signInLink}>
+            Sign Up
+          </Link>
+        </Text>
+      </View>
+    </LinearGradient>
   );
 };
 
 export default signIn;
 
 const styles = StyleSheet.create({
-  page: {
+  background: {
     flex: 1,
-    resizeMode: "cover", // or "stretch"
   },
   container: {
-    flex: 1,
-    justifyContent: "center", // Center the content vertically
-  },
-  centeredContent: {
-    alignItems: "center",
-    justifyContent: "center",
+    paddingTop: 144,
+    position: "relative",
   },
   title: {
-    fontSize: 14,
-    marginBottom: 16,
-    marginTop: 16,
-    textAlign: "center",
-    width: "69%",
-    lineHeight: 20,
-    color: "#000", // Default color for the text
+    fontSize: 24,
+    fontWeight: "bold",
+    marginLeft: 40,
+    width: 176,
+    color: "#000",
   },
-  whiteText: {
-    color: "#fff", // White color for specific parts of the text
+  inputContainer: {
+    flexDirection: "column",
+    width: 310,
+    marginHorizontal: "auto",
+    marginTop: 50,
+    gap: 14,
+  },
+  input: {
+    borderBottomColor: "#000",
+    borderBottomWidth: 1,
+    paddingVertical: 8,
+    fontWeight: "regular",
+    fontSize: 14,
+    color: "#000",
   },
   buttonContainer: {
-    paddingBottom: 40, // Add padding to push the button to the bottom
-    paddingHorizontal: 20,
-    width: "100%", // Make the button span the full width
-    position: "absolute", // Position the button at the bottom
-    bottom: 40, // Position the button at the bottom
+    flexDirection: "column",
+    marginTop: 56,
+    alignItems: "center",
   },
-  link: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+  button: {
+    paddingVertical: 14,
+    paddingHorizontal: 10,
     backgroundColor: "#2B2A2A",
+    borderRadius: 30, // Apply rounded corner
+    width: 310,
+  },
+  buttonText: {
     color: "#fff",
     textAlign: "center",
-    borderRadius: 20, // Apply rounded corners
-  },
-  icon: {
-    marginRight: 100, // Add space between icon and text
+    fontSize: 14,
   },
   signInText: {
-    color: "#fff", // White color for the text
+    color: "#000", // White color for the text
     textAlign: "center",
-    marginTop: 20,
+    marginTop: 28,
   },
   signInLink: {
-    color: "#000", // Black color for the link
+    color: "#fff", // Black color for the link
     textDecorationLine: "underline", // Underline the link
   },
 });
