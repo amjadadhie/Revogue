@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fs, app } from "../../constants/firebaseConfig"; // Import konfigurasi Firestore
+import { fs, app } from './firebaseConfig'; // Import konfigurasi Firestore
 
 import {
   View,
@@ -18,57 +18,52 @@ import {
   onAuthStateChanged,
   signOut,
 } from "@firebase/auth";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  doc,
-  setDoc,
-} from "@firebase/firestore"; // Import the 'collection' method from 'firebase/firestore'
+import { getFirestore, collection, addDoc, doc, setDoc } from "@firebase/firestore"; // Import the 'collection' method from 'firebase/firestore'
 import React from "react";
 
-interface InputSignUpProps {
-  email: string;
-  setEmail: (email: string) => void;
-  username: string;
-  setUsername: (username: string) => void;
-  password: string;
-  setPassword: (password: string) => void;
-  isLogin: boolean;
-  setIsLogin: (isLogin: boolean) => void;
-  handleAuthentication: () => void;
+interface InputSignUpProps{
+    email: string,
+    setEmail: (email: string) => void,
+    username: string,
+    setUsername: (username: string) => void,
+    password: string,
+    setPassword: (password: string) => void,
+    isLogin: boolean,
+    setIsLogin: (isLogin: boolean) => void,
+    handleAuthentication: () => void
+  }
+  
+  const SignUp = ({
+    email,
+    setEmail,
+    username,
+    setUsername,
+    password,
+    setPassword,
+    isLogin,
+    setIsLogin,
+    handleAuthentication,
+  }: InputSignUpProps) => {
+    const addRecord = async () => {
+        try {
+          await setDoc(doc(fs, "Pengguna", email), {
+            email: email,
+            username: username,
+          });
+          alert('Akun Berhasil Dibuat!');
+        } catch (error) {
+          console.error("Error! : ", error);
+        }
+    };
+
+    return (
+        
+        // START CODE HERE
+        <View>
+          
+        </View>
+        // END CODE HERE
+    )
 }
 
-const SignUp = ({
-  email,
-  setEmail,
-  username,
-  setUsername,
-  password,
-  setPassword,
-  isLogin,
-  setIsLogin,
-  handleAuthentication,
-}: InputSignUpProps) => {
-  const addRecord = async () => {
-    try {
-      await setDoc(doc(fs, "Pengguna", email), {
-        email: email,
-        username: username,
-      });
-      alert("Record added!");
-    } catch (error) {
-      console.error("Error adding record: ", error);
-    }
-  };
 
-  return (
-    // START CODE HERE
-    <View>
-      <Text>sign up</Text>
-    </View>
-    // END CODE HERE
-  );
-};
-
-export default SignUp;
