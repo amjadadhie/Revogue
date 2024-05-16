@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { auth, updatePassword } from './firebaseConfig'; // Import konfigurasi Firestore
+import { auth, updatePassword } from '../constants/firebaseConfig'; // Import konfigurasi Firestore
 // import { getFirestore, collection, addDoc, doc, setDoc } from "@firebase/firestore"; // Import the 'collection' method from 'firebase/firestore'
 // import { updatePassword } from '@firebase/auth';
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fs, app, auth } from './firebaseConfig'; // Import konfigurasi Firestore
+import { fs, app, auth } from '../constants/firebaseConfig'; // Import konfigurasi Firestore
 import { collection, addDoc, doc, getDoc, updateDoc, getDocs, query, where} from "@firebase/firestore"; // Import the 'collection' method from 'firebase/firestore'
 
 // Mengambil list address akun yang sedang login (baca alamat)
