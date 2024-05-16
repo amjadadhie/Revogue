@@ -13,13 +13,13 @@ import Icon from "react-native-vector-icons/FontAwesome"; // Import the Icon com
 const LandingPage = () => {
   return (
     <ImageBackground
-      source={require("../assets/home/image 1.png")} // Replace with your image path
+      source={require("../../assets/home/image 1.png")} // Replace with your image path
       style={styles.background}
     >
       <View style={styles.container}>
         <View style={styles.centeredContent}>
           <Image
-            source={require("../assets/home/AppIcon.png")} // Replace with your image path
+            source={require("../../assets/home/AppIcon.png")} // Replace with your image path
           />
           <Text style={styles.title}>
             <Text style={styles.whiteText}>Empower Your</Text> Style{" "}
