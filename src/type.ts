@@ -12,6 +12,16 @@
 // export type Enums<T extends keyof Database['public']['Enums']> =
 //   Database['public']['Enums'][T];
 
+export type Barang = {
+    BarangID : string;
+    NamaBarang: string;
+    Kategori: String;
+    Harga: number;
+    Foto: string;
+    Deskripsi: string;
+    Stok: number;
+}
+
 // // export type Product = {
 // //   id: number;
 // //   image: string | null;
