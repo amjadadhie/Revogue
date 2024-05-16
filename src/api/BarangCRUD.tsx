@@ -27,6 +27,7 @@ async function readAllBarang(){
             console.log('Harga:', barangData.Harga);
             console.log('Link Foto:', barangData.Foto);
             console.log('Deskripsi:', barangData.Deskripsi);
+            console.log('Stok: ', barangData.Stok);
         });     
 
     }catch (error) {
@@ -36,4 +37,29 @@ async function readAllBarang(){
 
 // Contoh panggilan fungsi readAllBarang
 readAllBarang();
+
+
+// membuat fungsi updateStok
+
+async function updateStok(BarangID: string, Stok: number) {
+    if (!auth.currentUser) {
+        console.error('User not authenticated');
+        return;
+    }
+
+    try {
+        // Membuat referensi ke dokumen 'Barang' berdasarkan BarangID
+        const barangDocRef = doc(fs, 'Barang', BarangID);
+
+        // Mengupdate stok barang
+        await updateDoc(barangDocRef, {
+            Stok: Stok
+        });
+
+        console.log('Stok barang berhasil diupdate');
+
+    } catch (error) {
+        console.error('Error updating stok barang:', error);
+    }
+}
 
