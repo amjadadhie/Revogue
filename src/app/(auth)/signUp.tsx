@@ -18,6 +18,7 @@ const SignUp = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState('');
 
   const addRecord = async () => {
     try {
@@ -33,13 +34,18 @@ const SignUp = () => {
   };
 
   const handleSignUp = async () => {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      addRecord();
+      try {
+        if(password !== confirmPassword){
+          setError('Password baru dan konfirmasi password baru tidak sama');
+          Alert.alert("Password tidak sama");
+          return;
+        }
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        addRecord();
     } catch (error) {
       Alert.alert("Sign Up Failed");
     }
