@@ -28,7 +28,11 @@ const ProductListItem = () => {
   return (
     <View style={styles.listContainer}>
       {products.map((barang) => (
-        <Link key={barang.BarangID} href={`/${segments[0]}/menu/${barang.BarangID}`} asChild>
+        <Link
+          key={barang.BarangID}
+          href={`/${segments[0]}/menu/${barang.BarangID}`}
+          asChild
+        >
           <Pressable style={styles.container}>
             <Image source={{ uri: barang.Foto }} style={styles.image} />
             <Text style={styles.title}>{barang.NamaBarang}</Text>
@@ -46,26 +50,31 @@ const styles = StyleSheet.create({
   listContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between",
+    marginTop: 22,
+    justifyContent:"space-between",
+    alignContent: "space-between"
   },
   container: {
-    backgroundColor: "white",
-    padding: 10,
-    borderRadius: 20,
+    backgroundColor: "#FAFAFA",
     flex: 1,
-    maxWidth: "48%",
     marginBottom: 10,
   },
   image: {
-    width: "100%",
     aspectRatio: 1,
+    width: 140,
+    height: "auto",
+    borderRadius: 20,
+    borderColor: "#D4D4D4",
+    borderWidth: 2,
   },
   title: {
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: 14,
     marginVertical: 10,
+    fontWeight: "600",
   },
   price: {
-    fontWeight: "bold",
+    fontSize: 12,
+    color: "#555555",
+    fontWeight: "500",
   },
 });
