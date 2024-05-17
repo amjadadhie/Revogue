@@ -30,7 +30,7 @@ const ProductListItem = () => {
       {products.map((barang) => (
         <Link
           key={barang.BarangID}
-          href={`/${segments[0]}/menu/${barang.BarangID}`}
+          href={`/${segments[0]}/home/${barang.BarangID}`}
           asChild
         >
           <Pressable style={styles.container}>
@@ -51,17 +51,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     marginTop: 22,
-    justifyContent:"space-between",
-    alignContent: "space-between"
+    justifyContent: "space-between",
+    alignContent: "space-between",
   },
   container: {
     backgroundColor: "#FAFAFA",
     flex: 1,
     marginBottom: 10,
+    paddingHorizontal: 10,
+    maxWidth: "50%",
   },
   image: {
     aspectRatio: 1,
-    width: 140,
+    width: "100%",
     height: "auto",
     borderRadius: 20,
     borderColor: "#D4D4D4",

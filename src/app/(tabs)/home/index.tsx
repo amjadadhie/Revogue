@@ -45,10 +45,10 @@ export default function HomePage() {
           text="Shoes"
         />
       </View>
-      <ScrollView style={styles.boxContainer}>
+      <View style={styles.boxContainer}>
         <Text style={styles.title3}>Our Products</Text>
         <ProductListItem />
-      </ScrollView>
+      </View>
     </ScrollView>
   );
 }
