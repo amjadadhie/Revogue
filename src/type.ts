@@ -20,6 +20,7 @@ export type Barang = {
     Foto: string;
     Deskripsi: string;
     Stok: number;
+    NamaToko: string
 }
 
 export type Alamat = {
