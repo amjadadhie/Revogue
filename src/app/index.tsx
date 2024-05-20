@@ -28,14 +28,14 @@ const LandingPage = () => {
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        <Link href={"/signUp"} style={styles.link}>
+        <Link href={"/signIn"} style={styles.link}>
           {/* <Icon name="envelope" size={16} color="#fff" style={styles.icon} /> */}
-          <Text>Sign Up With Email</Text>
+          <Text>Sign In With Email</Text>
         </Link>
         <Text style={styles.signInText}>
-          Already have an account?{" "}
-          <Link href={"/signIn"} style={styles.signInLink}>
-            Sign In
+          Doesn't have an account?{" "}
+          <Link href={"/signUp"} style={styles.signInLink}>
+            Sign Up
           </Link>
         </Text>
       </View>

@@ -1,14 +1,12 @@
-import {
-  Stack,
-  useLocalSearchParams,
-  useRouter,
-  useSegments,
-} from "expo-router";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import Button from "../../../components/button";
 import { Barang } from "../../../type";
 import { readBarangByID } from "../../../api/BarangCRUD";
+import Entypo from "@expo/vector-icons/Entypo";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const ProductDetailsScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -34,7 +32,7 @@ const ProductDetailsScreen = () => {
     };
 
     fetchData();
-  }, [id]); // Include BarangID in the dependency array
+  }, [id]);
 
   if (loading) {
     return <Text>Loading...</Text>;
@@ -46,6 +44,15 @@ const ProductDetailsScreen = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.iconContainer}>
+        <Link href={"/home"}>
+          <Entypo name="chevron-left" size={28} color="black" />
+        </Link>
+        <View style={styles.iconContainer2}>
+          <FontAwesome6 name="heart" size={24} color="black" />
+          <MaterialCommunityIcons name="cart-outline" size={24} color="black" />
+        </View>
+      </View>
       <Image
         source={{ uri: product.Foto }}
         style={styles.image}
@@ -56,7 +63,7 @@ const ProductDetailsScreen = () => {
           <Text style={styles.judul}>{product.NamaBarang}</Text>
           <Text style={styles.harga}>{product.Harga}</Text>
         </View>
-        <Text style={styles.toko}>{product.Kategori}</Text>
+        <Text style={styles.toko}>{product.NamaToko}</Text>
         <View style={styles.descriptioContainer}>
           <Text style={styles.judul2}>Description</Text>
           <Text style={styles.descriptionText}>{product.Deskripsi}</Text>
@@ -78,6 +85,20 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 500,
     position: "absolute",
+    top: 0,
+    zIndex: 1,
+  },
+  iconContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 20,
+    zIndex: 2,
+  },
+  iconContainer2: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 15,
   },
   descriptionBox: {
     backgroundColor: "white",

@@ -50,24 +50,23 @@ const styles = StyleSheet.create({
   listContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    marginTop: 22,
     justifyContent: "space-between",
-    alignContent: "space-between",
+    marginTop: 10,
   },
   container: {
     backgroundColor: "#FAFAFA",
-    flex: 1,
-    marginBottom: 10,
+    width: "50%", // Adjusting to slightly less than 50% to account for margin
+    marginVertical: 10,
     paddingHorizontal: 10,
-    maxWidth: "50%",
+    borderRadius: 10,
   },
   image: {
     aspectRatio: 1,
     width: "100%",
     height: "auto",
-    borderRadius: 20,
+    borderRadius: 10,
     borderColor: "#D4D4D4",
-    borderWidth: 2,
+    borderWidth: 1,
   },
   title: {
     fontSize: 14,

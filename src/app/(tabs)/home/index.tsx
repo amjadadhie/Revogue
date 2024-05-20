@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Image, Text, View, ScrollView } from "react-native";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Feather from "@expo/vector-icons/Feather";
 import ProductListItem from "../../../components/clothesBox";
 import TypeFilter from "../../../components/clothesType";
 
@@ -15,12 +15,11 @@ export default function HomePage() {
   return (
     <ScrollView style={styles.page}>
       <View style={styles.container1}>
-        <View>
-          <Text style={styles.title}>Hi, User!</Text>
-        </View>
+        <Text style={styles.title}>Hi, User!</Text>
+
         <View style={styles.iconContainer}>
           <FontAwesome6 name="heart" size={24} color="black" />
-          <MaterialCommunityIcons name="cart-outline" size={24} color="black" />
+          <Feather name="shopping-cart" size={24} color="black" />
         </View>
       </View>
       <View style={styles.typeContainer}>
