@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: 600,
+    height: 500,
     position: "absolute",
   },
   descriptionBox: {

@@ -55,15 +55,28 @@ export async function updateStok(BarangID: string, Stok: number) {
   }
 
   try {
-    // Membuat referensi ke dokumen 'Barang' berdasarkan BarangID
-    const barangDocRef = doc(fs, "Barang", BarangID);
+    // Membuat query ke koleksi Barang berdasarkan BarangID
+    const q = query(collection(fs, "Barang"), where("BarangID", "==", BarangID));
 
-    // Mengupdate stok barang
-    await updateDoc(barangDocRef, {
-      Stok: Stok,
-    });
+    // Mendapatkan dokumen barang dari query
+    const querySnapshot = await getDocs(q);
 
-    console.log("Stok barang berhasil diupdate");
+    if (!querySnapshot.empty) {
+      // Mengambil dokumen pertama dari hasil query (jika ada beberapa dokumen dengan BarangID yang sama)
+      const barangDocSnap = querySnapshot.docs[0];
+
+      // Membuat referensi ke dokumen barang
+      const barangDocRef = doc(fs, "Barang", barangDocSnap.id);
+
+      // Mengupdate stok barang
+      await updateDoc(barangDocRef, {
+        Stok: Stok,
+      });
+
+      console.log("Stok barang berhasil diupdate");
+    } else {
+      console.log("No such document!");
+    }
   } catch (error) {
     console.error("Error updating stok barang:", error);
   }
@@ -78,21 +91,22 @@ export async function readBarangByID(
   }
 
   try {
-    // Membuat referensi ke dokumen barang berdasarkan BarangID
-    const barangDocRef = doc(fs, "Barang", String(barangID));
+    // Membuat query ke koleksi Barang berdasarkan BarangID
+    const q = query(collection(fs, "Barang"), where("BarangID", "==", barangID));
 
-    // Mendapatkan dokumen barang dari referensi
-    const barangDocSnap = await getDoc(barangDocRef);
-    console.log("asu");
+    // Mendapatkan dokumen barang dari query
+    const querySnapshot = await getDocs(q);
 
-    if (barangDocSnap.exists()) {
+    if (!querySnapshot.empty) {
+      // Mengambil dokumen pertama dari hasil query (jika ada beberapa dokumen dengan BarangID yang sama)
+      const barangDocSnap = querySnapshot.docs[0];
+
       // Mengonversi data menjadi tipe Barang
       const barangData = barangDocSnap.data() as Barang;
-      console.log(barangData);
 
       return barangData;
     } else {
-      console.log("No such document! kontol");
+      console.log("No such document!");
       return null;
     }
   } catch (error) {
@@ -100,7 +114,6 @@ export async function readBarangByID(
     return null;
   }
 }
-
 // contoh panggil
 // FlanelJokowi = readBarangByID("b001");
 
@@ -169,7 +182,7 @@ export async function searchBarangByName(
 
     // Mengiterasi dan mengonversi setiap dokumen menjadi tipe Barang
     querySnapshot.forEach((doc) => {
-      const barangData = doc.data() as Barang; // Mengonversi data menjadi tipe Barang
+      const barangData = doc.data() as Barang; // Mengonversi data menjadi tipe Baranwg
       searchResults.push(barangData); // Menyimpan data barang dalam array
     });
 
