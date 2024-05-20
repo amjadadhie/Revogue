@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import { Link, useSegments } from "expo-router";
 import React, { useEffect, useState } from "react";
-import readAllBarang from "../api/BarangCRUD";
+import { readAllBarang } from "../api/BarangCRUD";
 import { Barang } from "../type";
 
 const ProductListItem = () => {

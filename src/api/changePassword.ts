@@ -34,7 +34,7 @@ const [error, setError] = useState('');
 
 // const currentUser = doc(fs, 'Pengguna/' + userEmail);
 
-const changePassword = async () => {
+export const changePassword = async () => {
     if(newPassword !== confirmNewPassword){
         setError('Password baru dan konfirmasi password baru tidak sama');
         return;

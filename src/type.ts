@@ -22,6 +22,21 @@ export type Barang = {
     Stok: number;
 }
 
+export type Alamat = {
+    DetailAlamat : string,
+    KodePos : String,
+    NamaAlamat : String,
+    NamaJalan : string,
+}
+
+export type Keranjang = {
+    BarangID : string,
+}
+
+export type Tandai = {
+    BarangID : string,
+}
+
 // // export type Product = {
 // //   id: number;
 // //   image: string | null;

@@ -15,7 +15,7 @@ import { Barang } from "../type";
 
 // Mengambil list semua barang yang ada di firestore
 
-async function readAllBarang() {
+export async function readAllBarang() {
   if (!auth.currentUser) {
     console.error("User not authenticated");
     return;
@@ -44,13 +44,12 @@ async function readAllBarang() {
   }
 }
 
-export default readAllBarang;
 // Contoh panggilan fungsi readAllBarang
 //readAllBarang();
 
 // membuat fungsi updateStok
 
-async function updateStok(BarangID: string, Stok: number) {
+export async function updateStok(BarangID: string, Stok: number) {
   if (!auth.currentUser) {
     console.error("User not authenticated");
     return;
@@ -71,7 +70,7 @@ async function updateStok(BarangID: string, Stok: number) {
   }
 }
 
-async function readBarangByID(barangID: string): Promise<Barang | null> {
+export async function readBarangByID(barangID: string): Promise<Barang | null> {
   if (!auth.currentUser) {
       console.error("User not authenticated");
       return null;
@@ -103,7 +102,7 @@ async function readBarangByID(barangID: string): Promise<Barang | null> {
 
 // filter barang by harga
 
-async function filterBarangByHarga(minHarga: number, maxHarga: number): Promise<Barang[]> {
+export async function filterBarangByHarga(minHarga: number, maxHarga: number): Promise<Barang[]> {
   if (!auth.currentUser) {
       console.error("User not authenticated");
       return [];
@@ -140,7 +139,7 @@ async function filterBarangByHarga(minHarga: number, maxHarga: number): Promise<
 }
 // ini fungsi returnnya mirip sama readAllBarang
 
-async function searchBarangByName(namaBarang: string): Promise<Barang[]> {
+export async function searchBarangByName(namaBarang: string): Promise<Barang[]> {
   if (!auth.currentUser) {
       console.error("User not authenticated");
       return [];
