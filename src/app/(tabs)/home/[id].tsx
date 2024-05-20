@@ -1,36 +1,65 @@
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import {
+  Stack,
+  useLocalSearchParams,
+  useRouter,
+  useSegments,
+} from "expo-router";
 import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../../components/button";
+import { Barang } from "../../../type";
+import { readBarangByID } from "../../../api/BarangCRUD";
 
 const ProductDetailsScreen = () => {
-  const { id: idString } = useLocalSearchParams();
+  const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const screenWidth = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
   const halfScreenHeight = screenHeight / 2.1;
+  const [product, setProduct] = useState<Barang | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  console.log(id);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const barangData = (await readBarangByID(id)) as Barang;
+        setProduct(barangData);
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id]); // Include BarangID in the dependency array
+
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (!product) {
+    return <Text>No product found.</Text>;
+  }
 
   return (
     <View style={styles.container}>
       <Image
-        source={require("../../../../assets/home/tes.png")}
+        source={{ uri: product.Foto }}
         style={styles.image}
         resizeMode="cover"
       />
-
       <View style={[styles.descriptionBox, { height: halfScreenHeight }]}>
         <View style={styles.judulHarga}>
-          <Text style={styles.judul}>Judul</Text>
-          <Text style={styles.harga}>Harga</Text>
+          <Text style={styles.judul}>{product.NamaBarang}</Text>
+          <Text style={styles.harga}>{product.Harga}</Text>
         </View>
-        <Text style={styles.toko}>Toko</Text>
+        <Text style={styles.toko}>{product.Kategori}</Text>
         <View style={styles.descriptioContainer}>
           <Text style={styles.judul2}>Description</Text>
-          <Text style={styles.descriptionText}>
-            Introducing our latest creation, the "Elegance in Motion" dress.
-            Crafted with meticulous attention to detail, this exquisite garment
-            epitomizes sophistication and style.
-          </Text>
+          <Text style={styles.descriptionText}>{product.Deskripsi}</Text>
         </View>
         <View style={styles.buttonContainer}>
           <Button text="Add To Cart" />
@@ -48,6 +77,7 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: 600,
+    position: "absolute",
   },
   descriptionBox: {
     backgroundColor: "white",
