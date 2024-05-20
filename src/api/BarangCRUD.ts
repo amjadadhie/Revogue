@@ -49,7 +49,7 @@ export async function readAllBarang() {
 
 // membuat fungsi updateStok
 
-export async function updateStok(BarangID: string, Stok: number) {
+export async function updateStok(BarangID: number, Stok: number) {
   if (!auth.currentUser) {
     console.error("User not authenticated");
     return;
@@ -57,8 +57,9 @@ export async function updateStok(BarangID: string, Stok: number) {
 
   try {
     // Membuat referensi ke dokumen 'Barang' berdasarkan BarangID
-    const barangDocRef = doc(fs, "Barang", BarangID);
-
+    // convert BarangID to string
+    const barangDocRef = doc(fs, "Barang", String(BarangID));
+  
     // Mengupdate stok barang
     await updateDoc(barangDocRef, {
       Stok: Stok,
@@ -70,7 +71,7 @@ export async function updateStok(BarangID: string, Stok: number) {
   }
 }
 
-export async function readBarangByID(barangID: string): Promise<Barang | null> {
+export async function readBarangByID(BarangID: number): Promise<Barang | null> {
   if (!auth.currentUser) {
       console.error("User not authenticated");
       return null;
@@ -78,7 +79,7 @@ export async function readBarangByID(barangID: string): Promise<Barang | null> {
 
   try {
       // Membuat referensi ke dokumen barang berdasarkan BarangID
-      const barangDocRef = doc(fs, "Barang", barangID);
+      const barangDocRef = doc(fs, "Barang", String(BarangID));
 
       // Mendapatkan dokumen barang dari referensi
       const barangDocSnap = await getDoc(barangDocRef);

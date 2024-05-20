@@ -13,7 +13,7 @@
 //   Database['public']['Enums'][T];
 
 export type Barang = {
-    BarangID : string;
+    BarangID : number;
     NamaBarang: string;
     Kategori: String;
     Harga: number;
