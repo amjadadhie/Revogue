@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import { Link, useSegments } from "expo-router";
 import { readAllBarang } from "../api/BarangCRUD";
-import { readTandai, addTandai } from "../api/cartLoved"; // Ensure you import readTandai and addTandai
+import { readTandai, addTandai, deleteTandai } from "../api/cartLoved"; // Ensure you import readTandai, addTandai, and removeTandai
 import { Barang } from "../type";
 
 interface ProductListItemProps {
@@ -42,7 +42,9 @@ const ProductListItem: React.FC<ProductListItemProps> = ({
 
   const handleLike = async (id: string) => {
     try {
-      if (!likedItems[id]) {
+      if (likedItems[id]) {
+        await deleteTandai(id);
+      } else {
         await addTandai(id);
       }
       setLikedItems((prevLikedItems) => ({
