@@ -3,9 +3,14 @@ import { Link, useSegments } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { readAllBarang } from "../api/BarangCRUD";
 import { Barang } from "../type";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import Feather from "@expo/vector-icons/Feather";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { AntDesign } from "@expo/vector-icons";
 
 const ProductListItem = () => {
   const [products, setProducts] = useState<Barang[] | undefined>(undefined);
+  const [likedItems, setLikedItems] = useState<{ [key: string]: boolean }>({});
   const segments = useSegments();
 
   useEffect(() => {
@@ -21,6 +26,13 @@ const ProductListItem = () => {
     fetchData();
   }, []);
 
+  const handleLike = (id: string) => {
+    setLikedItems((prevLikedItems) => ({
+      ...prevLikedItems,
+      [id]: !prevLikedItems[id],
+    }));
+  };
+
   if (!products) {
     return <Text>Loading...</Text>;
   }
@@ -28,17 +40,31 @@ const ProductListItem = () => {
   return (
     <View style={styles.listContainer}>
       {products.map((barang) => (
-        <Link
-          key={barang.BarangID}
-          href={`/${segments[0]}/home/${barang.BarangID}`}
-          asChild
-        >
-          <Pressable style={styles.container}>
-            <Image source={{ uri: barang.Foto }} style={styles.image} />
-            <Text style={styles.title}>{barang.NamaBarang}</Text>
-            <Text style={styles.price}>Rp{barang.Harga}</Text>
+        <View style={styles.container} key={barang.BarangID}>
+          <Pressable
+            style={styles.likeIconContainer}
+            onPress={() => handleLike(barang.BarangID)}
+          >
+            {likedItems[barang.BarangID] ? (
+              <Image
+                source={require("../../assets/home/heart-fill.png")}
+                style={styles.heartIcon}
+              />
+            ) : (
+              <Image
+                source={require("../../assets/home/heart.png")}
+                style={styles.heartIcon}
+              />
+            )}
           </Pressable>
-        </Link>
+          <Link href={`/${segments[0]}/home/${barang.BarangID}`} asChild>
+            <Pressable>
+              <Image source={{ uri: barang.Foto }} style={styles.image} />
+              <Text style={styles.title}>{barang.NamaBarang}</Text>
+              <Text style={styles.price}>Rp{barang.Harga}</Text>
+            </Pressable>
+          </Link>
+        </View>
       ))}
     </View>
   );
@@ -59,14 +85,25 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingHorizontal: 10,
     borderRadius: 10,
+    position: "relative",
   },
   image: {
     aspectRatio: 1,
     width: "100%",
-    height: "auto",
+    height: 180,
     borderRadius: 10,
     borderColor: "#D4D4D4",
     borderWidth: 1,
+  },
+  likeIconContainer: {
+    position: "absolute",
+    top: 8,
+    right: 18,
+    zIndex: 1,
+  },
+  heartIcon: {
+    height: 22,
+    width: 22,
   },
   title: {
     fontSize: 14,
