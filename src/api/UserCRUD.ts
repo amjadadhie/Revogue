@@ -69,58 +69,62 @@ export const changePassword = async () => {
 
 export async function editPengguna(
     Email: string,
-    file: File | null, // Menggunakan file sebagai parameter untuk upload gambar
     NamaToko: string,
     NamaPengguna: string,
     TanggalLahir: Date,
     JenisKelamin: string,
     NomorTelepon: string
-): Promise<void> {
+  ): Promise<void> {
     if (!auth.currentUser) {
-        console.error('User not authenticated');
-        return;
+      console.error('User not authenticated');
+      return;
     }
-
+  
     try {
-        // Membuat referensi dokumen pengguna berdasarkan email
-        const penggunaDocRef = doc(fs, 'Pengguna', Email);
+      // Membuat referensi dokumen pengguna berdasarkan email
+      const penggunaDocRef = doc(fs, 'Pengguna', Email);
+  
+      // Data pengguna yang akan diupdate tanpa mengubah foto
+      const updatedData: Partial<Pengguna> = {
+        NamaPengguna,
+        TanggalLahir,
+        JenisKelamin,
+        NomorTelepon,
+        NamaToko,
+      };
+  
+      // Mengupdate dokumen pengguna dengan data yang baru
+      await updateDoc(penggunaDocRef, updatedData);
+      console.log('User information updated successfully');
+    } catch (error) {
+      console.error('Error updating user information:', error);
+    }
+  }
 
-        // useEffect(() => {
-        //     const fetchData = async () => {
-        //       try {
-        //        const User: Pengguna = await readUser() as Pengguna;
-        //        const namaToko: string = User.NamaToko;
-        //       } catch (error) {
-        //         console.error("Error fetching data:", error);
-        //       }
-        //     };
-        
-        //     fetchData();
-        //   }, []);
-
-        // Data pengguna yang akan diupdate
-        let Foto = '';
-    if (file) {
+  export async function editFotoPengguna(Email: string, file: File): Promise<void> {
+    if (!auth.currentUser) {
+      console.error('User not authenticated');
+      return;
+    }
+  
+    try {
+      // Membuat referensi dokumen pengguna berdasarkan email
+      const penggunaDocRef = doc(fs, 'Pengguna', Email);
+  
+      // Upload gambar baru
       const storageRef = ref(storage, `Pengguna/${Email}/${file.name}`);
       await uploadBytes(storageRef, file);
-      Foto = await getDownloadURL(storageRef);
-    }
-
-    // Data pengguna yang akan diupdate
-    const updatedData: Pengguna = {
-      Email: Email,
-      NamaPengguna: NamaPengguna,
-      TanggalLahir: TanggalLahir,
-      JenisKelamin: JenisKelamin,
-      NomorTelepon: NomorTelepon,
-      NamaToko: NamaToko,
-      Foto: Foto, // Gunakan URL gambar yang diunggah
-    };
-
-        // Mengupdate dokumen pengguna dengan data yang baru
-        await updateDoc(penggunaDocRef, updatedData);
-        console.log('User information updated successfully');
+      const Foto = await getDownloadURL(storageRef);
+  
+      // Data pengguna yang akan diupdate dengan foto baru
+      const updatedData: Partial<Pengguna> = {
+        Foto
+      };
+  
+      // Mengupdate dokumen pengguna dengan foto yang baru
+      await updateDoc(penggunaDocRef, updatedData);
+      console.log('User photo updated successfully');
     } catch (error) {
-        console.error('Error updating user information:', error);
+      console.error('Error updating user photo:', error);
     }
-}
+  }
