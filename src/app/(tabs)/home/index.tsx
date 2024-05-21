@@ -5,6 +5,7 @@ import Feather from "@expo/vector-icons/Feather";
 import ProductListItem from "../../../components/clothesBox";
 import TypeFilter from "../../../components/clothesType";
 import SearchBar from "../../../components/search";
+import { Link } from "expo-router";
 
 export default function HomePage() {
   const [filter, setFilter] = useState("");
@@ -19,7 +20,9 @@ export default function HomePage() {
       <View style={styles.container1}>
         <Text style={styles.title}>Hi, User!</Text>
         <View style={styles.iconContainer}>
-          <FontAwesome6 name="heart" size={24} color="black" />
+          <Link href={"/favorite"}>
+            <FontAwesome6 name="heart" size={24} color="black" />
+          </Link>
           <Feather name="shopping-cart" size={24} color="black" />
         </View>
       </View>
@@ -58,6 +61,7 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
     paddingTop: 72,
+    paddingBottom: 72,
     paddingRight: 26,
     paddingLeft: 26,
     backgroundColor: "#FAFAFA",

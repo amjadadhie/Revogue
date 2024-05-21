@@ -1,16 +1,19 @@
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import { Link, useSegments } from "expo-router";
-import React, { useEffect, useState } from "react";
 import { readAllBarang } from "../api/BarangCRUD";
+import { readTandai, addTandai } from "../api/cartLoved"; // Ensure you import readTandai and addTandai
 import { Barang } from "../type";
-import { AntDesign } from "@expo/vector-icons";
 
-// Define an interface for the props
 interface ProductListItemProps {
-  searchQuery: string;
+  searchQuery?: string;
+  likedOnly?: boolean;
 }
 
-const ProductListItem: React.FC<ProductListItemProps> = ({ searchQuery }) => {
+const ProductListItem: React.FC<ProductListItemProps> = ({
+  searchQuery = "",
+  likedOnly = false,
+}) => {
   const [products, setProducts] = useState<Barang[] | undefined>(undefined);
   const [likedItems, setLikedItems] = useState<{ [key: string]: boolean }>({});
   const segments = useSegments();
@@ -20,28 +23,50 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ searchQuery }) => {
       try {
         const barangData = await readAllBarang();
         setProducts(barangData);
+
+        const tandaiData = await readTandai();
+        if (tandaiData) {
+          const likedItemsMap = tandaiData.reduce((acc, item) => {
+            acc[item.BarangID] = true;
+            return acc;
+          }, {} as { [key: string]: boolean });
+          setLikedItems(likedItemsMap);
+        }
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
   }, []);
 
-  const handleLike = (id: string) => {
-    setLikedItems((prevLikedItems) => ({
-      ...prevLikedItems,
-      [id]: !prevLikedItems[id],
-    }));
+  const handleLike = async (id: string) => {
+    try {
+      if (!likedItems[id]) {
+        await addTandai(id);
+      }
+      setLikedItems((prevLikedItems) => ({
+        ...prevLikedItems,
+        [id]: !prevLikedItems[id],
+      }));
+    } catch (error) {
+      console.error("Error handling like:", error);
+    }
   };
 
   if (!products) {
     return <Text>Loading...</Text>;
   }
 
-  const filteredProducts = products.filter((barang) =>
+  let filteredProducts = products.filter((barang) =>
     barang.NamaBarang.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  if (likedOnly) {
+    filteredProducts = filteredProducts.filter(
+      (barang) => likedItems[barang.BarangID]
+    );
+  }
 
   return (
     <View style={styles.listContainer}>
@@ -87,7 +112,7 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: "#FAFAFA",
-    width: "50%", // Adjusting to slightly less than 50% to account for margin
+    width: "48%", // Adjusting to slightly less than 50% to account for margin
     marginVertical: 10,
     paddingHorizontal: 10,
     borderRadius: 10,

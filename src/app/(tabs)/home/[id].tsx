@@ -1,5 +1,5 @@
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
-import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
+import { View, Text, Image, StyleSheet, Dimensions, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import Button from "../../../components/button";
 import { Barang } from "../../../type";
@@ -45,9 +45,9 @@ const ProductDetailsScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>
-        <Link href={"/home"}>
+        <Pressable onPress={() => router.back()}>
           <Entypo name="chevron-left" size={28} color="black" />
-        </Link>
+        </Pressable>
         <View style={styles.iconContainer2}>
           <FontAwesome6 name="heart" size={24} color="black" />
           <MaterialCommunityIcons name="cart-outline" size={24} color="black" />
