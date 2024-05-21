@@ -144,7 +144,7 @@ export async function addBarang(
   Deskripsi: string,
   Stok: number,
   NamaToko: string,
-  NamaPengguna: string,
+  EmailPengguna: string,
 ): Promise<void> {
   try {
     // Membuat referensi koleksi 'Barang'
@@ -165,7 +165,7 @@ export async function addBarang(
       Deskripsi,
       Stok,
       NamaToko,
-      NamaPengguna,
+      EmailPengguna,
     };
 
     // Menambahkan dokumen baru ke koleksi 'Barang' dengan data barang baru
@@ -186,7 +186,7 @@ export async function editBarang(
   Deskripsi: string,
   Stok: number,
   NamaToko: string,
-  NamaPengguna: string,
+  EmailPengguna: string,
 ): Promise<void> {
   try {
     // Membuat referensi dokumen barang berdasarkan BarangID
@@ -207,7 +207,7 @@ export async function editBarang(
       Deskripsi,
       Stok,
       NamaToko,
-      NamaPengguna,
+      EmailPengguna,
     };
 
     // Upload gambar baru jika diberikan
