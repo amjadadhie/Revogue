@@ -1,10 +1,25 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, Image, Pressable, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import SettingsButton from "@/src/components/settingButton"; // Adjust the import path as necessary
+import { userSignOut } from "../../(auth)/signOut";
+import { editFotoPengguna, readUser } from "@/src/api/UserCRUD";
+import { auth } from "@/src/constants/firebaseConfig";
 
 export default function SettingsPage() {
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [userData, setUserData] = useState<any>(null); // State to hold user data
+
+  const emailUser = auth.currentUser?.email as string;
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = await readUser();
+      setUserData(user);
+    };
+
+    fetchUserData();
+  }, []);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -15,10 +30,39 @@ export default function SettingsPage() {
     });
 
     if (!result.canceled && result.assets && result.assets.length > 0) {
+      // Update profile image state
       setProfileImage(result.assets[0].uri);
+
+      // Call editFotoPengguna function with user's email and selected image file
+      try {
+        await editFotoPengguna(emailUser, result.assets[0].uri);
+        console.log("User photo updated successfully");
+      } catch (error) {
+        console.error("Error updating user photo:", error);
+      }
     }
   };
 
+  const handleSignOut = () => {
+    Alert.alert("Sign Out", "Are you sure you want to sign out?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Sign Out",
+        onPress: async () => {
+          try {
+            await userSignOut();
+            // Navigate to sign-in page or perform any other necessary actions
+          } catch (error) {
+            console.error("Error signing out:", error);
+          }
+        },
+        style: "destructive",
+      },
+    ]);
+  };
   return (
     <View style={styles.page}>
       <View style={styles.container1}>
@@ -28,8 +72,8 @@ export default function SettingsPage() {
         <Pressable onPress={pickImage}>
           <Image
             source={
-              profileImage
-                ? { uri: profileImage }
+              userData && userData.Foto
+                ? { uri: userData.Foto }
                 : require("../../../../assets/icon.png")
             }
             style={styles.image}
@@ -38,7 +82,9 @@ export default function SettingsPage() {
         <Text style={styles.body2} selectionColor={"#606060"}>
           Hi,
         </Text>
-        <Text style={styles.body2}>Raka Admiharfan</Text>
+        <Text style={styles.body2}>
+          {userData ? userData.Username : "Loading..."}
+        </Text>
       </View>
       <SettingsButton
         href="/settings/userDetail"
@@ -61,8 +107,8 @@ export default function SettingsPage() {
         title="My Orders"
       />
       <SettingsButton
-        href="/settings/userDetail"
         source="../../../../assets/icon/log-out.svg"
+        onPress={handleSignOut}
         title="Sign Out"
       />
     </View>

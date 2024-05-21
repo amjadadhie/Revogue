@@ -7,15 +7,17 @@ interface SettingsButtonProps {
   href?: string;
   source: string; // This will be a URI string now
   title: string;
+  onPress?: () => void;
 }
 
 const SettingsButton: React.FC<SettingsButtonProps> = ({
   href = "/",
   source,
   title,
+  onPress,
 }) => {
   return (
-    <Pressable>
+    <Pressable onPress={onPress}>
       <Link href={href} asChild>
         <Pressable style={styles.linkContainer}>
           <Image source={{ uri: source }} style={styles.icon} />

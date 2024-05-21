@@ -17,9 +17,7 @@ import {
 
 // const [userEmail, setUserEmail] = useState('');
 // const [currentPassword, setCurrentPassword] = useState('');
-const [newPassword, setNewPassword] = useState('');
-const [confirmNewPassword, setConfirmNewPassword] = useState('');
-const [error, setError] = useState('');
+
 
 export async function readUser(): Promise<Pengguna | null> {
     if (!auth.currentUser) {
@@ -53,6 +51,9 @@ export async function readUser(): Promise<Pengguna | null> {
 }
 
 export const changePassword = async () => {
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [error, setError] = useState('');
     if(newPassword !== confirmNewPassword){
         setError('Password baru dan konfirmasi password baru tidak sama');
         return;
