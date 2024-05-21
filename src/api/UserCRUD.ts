@@ -101,7 +101,7 @@ export async function editPengguna(
     }
   }
 
-  export async function editFotoPengguna(Email: string, file: File): Promise<void> {
+  export async function editFotoPengguna(Email: string, fotoUrl: string): Promise<void> {
     if (!auth.currentUser) {
       console.error('User not authenticated');
       return;
@@ -111,14 +111,9 @@ export async function editPengguna(
       // Membuat referensi dokumen pengguna berdasarkan email
       const penggunaDocRef = doc(fs, 'Pengguna', Email);
   
-      // Upload gambar baru
-      const storageRef = ref(storage, `Pengguna/${Email}/${file.name}`);
-      await uploadBytes(storageRef, file);
-      const Foto = await getDownloadURL(storageRef);
-  
-      // Data pengguna yang akan diupdate dengan foto baru
+      // Data pengguna yang akan diupdate dengan URL foto baru
       const updatedData: Partial<Pengguna> = {
-        Foto
+        Foto: fotoUrl
       };
   
       // Mengupdate dokumen pengguna dengan foto yang baru
