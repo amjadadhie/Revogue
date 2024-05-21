@@ -1,7 +1,13 @@
-import { collection, getDocs, doc, getDoc, addDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, addDoc, onSnapshot } from 'firebase/firestore';
 import { auth, fs } from '../constants/firebaseConfig'; // Pastikan Anda mengimpor auth dan fs dari file konfigurasi Firebase
 import { Keranjang, Tandai } from '../type'; // Pastikan Anda mengimpor tipe Keranjang
-
+import {
+    updateDoc,
+    query,
+    where,
+    deleteDoc,
+  } from "@firebase/firestore"; // Import the 'collection' method from 'firebase/firestore'
+import { useState, useEffect } from "react";
 
 export async function readKeranjang(): Promise<Keranjang[] | void> {
     if (!auth.currentUser) {
@@ -85,7 +91,7 @@ export async function readTandai(): Promise<Tandai[] | void> {
     }
 }
 
-export async function addKeranjang(BarangID: string) {
+export async function addKeranjang(BarangID: string, Harga: number) {
     if (!auth.currentUser) {
         console.error('User not authenticated');
         return;
@@ -101,12 +107,36 @@ export async function addKeranjang(BarangID: string) {
         // Membuat referensi koleksi 'DaftarKeranjang' di bawah dokumen pengguna yang sesuai dengan email
         const keranjangCollectionRef = collection(fs, 'Pengguna', userEmail, 'DaftarKeranjang');
 
-        // Data keranjang yang akan ditambahkan
-        const keranjangData = { BarangID };
+        // Membuat query untuk mencari dokumen keranjang dengan BarangID yang sesuai
+        const q = query(keranjangCollectionRef, where('BarangID', '==', BarangID));
+        const querySnapshot = await getDocs(q);
 
-        // Menambahkan dokumen baru ke koleksi 'DaftarKeranjang'
-        await addDoc(keranjangCollectionRef, keranjangData);
-        console.log('Barang added to Keranjang successfully');
+        if (!querySnapshot.empty) {
+            // Jika dokumen ditemukan, tambahkan jumlah dan perbarui subtotal
+            const keranjangDocSnap = querySnapshot.docs[0];
+            const keranjangDocRef = doc(fs, 'Pengguna', userEmail, 'DaftarKeranjang', keranjangDocSnap.id);
+
+            const currentData = keranjangDocSnap.data();
+            const newJumlah = currentData.Jumlah + 1;
+            const newSubTotal = newJumlah * Harga;
+
+            await updateDoc(keranjangDocRef, {
+                Jumlah: newJumlah,
+                SubTotal: newSubTotal
+            });
+
+            console.log('Barang updated in Keranjang successfully');
+        } else {
+            // Jika dokumen tidak ditemukan, tambahkan dokumen baru dengan Jumlah 1 dan SubTotal = Harga
+            const keranjangData = {
+                BarangID: BarangID,
+                Jumlah: 1,
+                SubTotal: Harga
+            };
+
+            await addDoc(keranjangCollectionRef, keranjangData);
+            console.log('Barang added to Keranjang successfully');
+        }
     } catch (error) {
         console.error('Error adding to Keranjang:', error);
     }
@@ -140,6 +170,91 @@ export async function addTandai(BarangID: string) {
       console.error('Error adding tanda:', error);
     }
   }
+
+  export async function deleteTandai(BarangID: string) {
+    if (!auth.currentUser) {
+      console.error('User not authenticated');
+      return;
+    }
+  
+    const userEmail = auth.currentUser.email;
+    if (!userEmail) {
+      console.error('User email is not available');
+      return;
+    }
+  
+    try {
+      // Membuat referensi koleksi 'DaftarTandai' di bawah dokumen pengguna yang sesuai dengan email
+      const tandaiCollectionRef = collection(fs, 'Pengguna', userEmail, 'DaftarTandai');
+  
+      // Membuat query untuk mencari dokumen tanda dengan BarangID yang sesuai
+      const q = query(tandaiCollectionRef, where('BarangID', '==', BarangID));
+      const querySnapshot = await getDocs(q);
+  
+      if (!querySnapshot.empty) {
+        // Menghapus semua dokumen yang ditemukan dengan BarangID yang sesuai
+        querySnapshot.forEach(async (doc) => {
+          await deleteDoc(doc.ref);
+        });
+        console.log('Barang removed from tanda successfully');
+      } else {
+        console.log('No such document with the given BarangID');
+      }
+    } catch (error) {
+      console.error('Error deleting tanda:', error);
+    }
+  }
+
+  export async function reduceKeranjang(BarangID: string, Harga: number) {
+    if (!auth.currentUser) {
+        console.error('User not authenticated');
+        return;
+    }
+
+    const userEmail = auth.currentUser.email;
+    if (!userEmail) {
+        console.error('User email is not available');
+        return;
+    }
+
+    try {
+        // Membuat referensi koleksi 'DaftarKeranjang' di bawah dokumen pengguna yang sesuai dengan email
+        const keranjangCollectionRef = collection(fs, 'Pengguna', userEmail, 'DaftarKeranjang');
+
+        // Membuat query untuk mencari dokumen keranjang dengan BarangID yang sesuai
+        const q = query(keranjangCollectionRef, where('BarangID', '==', BarangID));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+            // Jika dokumen ditemukan, kurangi jumlah dan perbarui subtotal
+            const keranjangDocSnap = querySnapshot.docs[0];
+            const keranjangDocRef = doc(fs, 'Pengguna', userEmail, 'DaftarKeranjang', keranjangDocSnap.id);
+
+            const currentData = keranjangDocSnap.data();
+            const newJumlah = currentData.Jumlah - 1;
+            const newSubTotal = newJumlah * Harga;
+
+            if (newJumlah > 0) {
+                // Jika jumlah baru lebih dari 0, perbarui dokumen
+                await updateDoc(keranjangDocRef, {
+                    Jumlah: newJumlah,
+                    SubTotal: newSubTotal
+                });
+
+                console.log('Jumlah barang berhasil dikurangi di Keranjang');
+            } else {
+                // Jika jumlah baru adalah 0 atau kurang, hapus dokumen
+                await deleteDoc(keranjangDocRef);
+                console.log('Barang dihapus dari Keranjang');
+            }
+        } else {
+            console.log('No such document!');
+        }
+    } catch (error) {
+        console.error('Error reducing keranjang:', error);
+    }
+}
+
   
 
 

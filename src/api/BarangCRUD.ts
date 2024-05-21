@@ -1,17 +1,15 @@
 import { useState, useEffect } from "react";
-import { fs, app, auth } from "../constants/firebaseConfig"; // Import konfigurasi Firestore
+import { fs, auth } from "../constants/firebaseConfig"; // Import konfigurasi Firestore
+import { collection, doc, onSnapshot } from "firebase/firestore";
+import { Barang } from "../type";
 import {
-  collection,
   addDoc,
-  doc,
   getDoc,
   updateDoc,
   getDocs,
   query,
   where,
 } from "@firebase/firestore"; // Import the 'collection' method from 'firebase/firestore'
-
-import { Barang } from "../type";
 
 // Mengambil list semua barang yang ada di firestore
 
@@ -43,7 +41,6 @@ export async function readAllBarang() {
   }
 }
 
-
 export async function updateStok(BarangID: string, Stok: number) {
   if (!auth.currentUser) {
     console.error("User not authenticated");
@@ -51,28 +48,15 @@ export async function updateStok(BarangID: string, Stok: number) {
   }
 
   try {
-    // Membuat query ke koleksi Barang berdasarkan BarangID
-    const q = query(collection(fs, "Barang"), where("BarangID", "==", BarangID));
+    // Membuat referensi ke dokumen 'Barang' berdasarkan BarangID
+    const barangDocRef = doc(fs, "Barang", BarangID);
 
-    // Mendapatkan dokumen barang dari query
-    const querySnapshot = await getDocs(q);
+    // Mengupdate stok barang
+    await updateDoc(barangDocRef, {
+      Stok: Stok,
+    });
 
-    if (!querySnapshot.empty) {
-      // Mengambil dokumen pertama dari hasil query (jika ada beberapa dokumen dengan BarangID yang sama)
-      const barangDocSnap = querySnapshot.docs[0];
-
-      // Membuat referensi ke dokumen barang
-      const barangDocRef = doc(fs, "Barang", barangDocSnap.id);
-
-      // Mengupdate stok barang
-      await updateDoc(barangDocRef, {
-        Stok: Stok,
-      });
-
-      console.log("Stok barang berhasil diupdate");
-    } else {
-      console.log("No such document!");
-    }
+    console.log("Stok barang berhasil diupdate");
   } catch (error) {
     console.error("Error updating stok barang:", error);
   }
@@ -110,10 +94,6 @@ export async function readBarangByID(
     return null;
   }
 }
-// contoh panggil
-// FlanelJokowi = readBarangByID("b001");
-
-// filter barang by harga
 
 export async function filterBarangByHarga(
   minHarga: number,
