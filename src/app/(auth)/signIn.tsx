@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fs, app, auth } from "../../constants/firebaseConfig"; // Import konfigurasi Firestore
+import { auth } from "../../constants/firebaseConfig"; // Import konfigurasi Firestore
 import { signInWithEmailAndPassword } from "@firebase/auth";
 import {
   View,

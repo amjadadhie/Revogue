@@ -1,17 +1,3 @@
-// import { Database } from './database.types';
-
-// export type Tables<T extends keyof Database['public']['Tables']> =
-//   Database['public']['Tables'][T]['Row'];
-
-// export type InsertTables<T extends keyof Database['public']['Tables']> =
-//   Database['public']['Tables'][T]['Insert'];
-
-//   export type UpdateTables<T extends keyof Database['public']['Tables']> =
-//   Database['public']['Tables'][T]['Update'];
-
-// export type Enums<T extends keyof Database['public']['Enums']> =
-//   Database['public']['Enums'][T];
-
 export type Barang = {
     BarangID : string;
     NamaBarang: string;
@@ -21,6 +7,14 @@ export type Barang = {
     Deskripsi: string;
     Stok: number;
     NamaToko: string
+}
+
+export type Pengguna = {
+    Email : string,
+    NamaPengguna: string,
+    TanggalLahir: Date,
+    JenisKelamin: string,
+    NomorTelepon: string,
 }
 
 export type Alamat = {

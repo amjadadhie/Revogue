@@ -23,7 +23,7 @@ const SignUp = () => {
   const addRecord = async () => {
     try {
       await setDoc(doc(fs, "Pengguna", email), {
-        email: email,
+        Email: email,
         Username: username,
       });
       alert("Akun Berhasil Dibuat!");
