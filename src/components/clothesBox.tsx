@@ -3,12 +3,14 @@ import { Link, useSegments } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { readAllBarang } from "../api/BarangCRUD";
 import { Barang } from "../type";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import Feather from "@expo/vector-icons/Feather";
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { AntDesign } from "@expo/vector-icons";
 
-const ProductListItem = () => {
+// Define an interface for the props
+interface ProductListItemProps {
+  searchQuery: string;
+}
+
+const ProductListItem: React.FC<ProductListItemProps> = ({ searchQuery }) => {
   const [products, setProducts] = useState<Barang[] | undefined>(undefined);
   const [likedItems, setLikedItems] = useState<{ [key: string]: boolean }>({});
   const segments = useSegments();
@@ -37,9 +39,13 @@ const ProductListItem = () => {
     return <Text>Loading...</Text>;
   }
 
+  const filteredProducts = products.filter((barang) =>
+    barang.NamaBarang.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <View style={styles.listContainer}>
-      {products.map((barang) => (
+      {filteredProducts.map((barang) => (
         <View style={styles.container} key={barang.BarangID}>
           <Pressable
             style={styles.likeIconContainer}

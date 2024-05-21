@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { StyleSheet, Image, Text, View, ScrollView } from "react-native";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Feather from "@expo/vector-icons/Feather";
 import ProductListItem from "../../../components/clothesBox";
 import TypeFilter from "../../../components/clothesType";
+import SearchBar from "../../../components/search";
 
 export default function HomePage() {
   const [filter, setFilter] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleFilter = (type: string) => {
     setFilter(type);
@@ -16,12 +18,12 @@ export default function HomePage() {
     <ScrollView style={styles.page}>
       <View style={styles.container1}>
         <Text style={styles.title}>Hi, User!</Text>
-
         <View style={styles.iconContainer}>
           <FontAwesome6 name="heart" size={24} color="black" />
           <Feather name="shopping-cart" size={24} color="black" />
         </View>
       </View>
+      <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <View style={styles.typeContainer}>
         <TypeFilter
           imageSource={require("../../../../assets/home/kaos.png")}
@@ -46,7 +48,7 @@ export default function HomePage() {
       </View>
       <View style={styles.boxContainer}>
         <Text style={styles.title3}>Our Products</Text>
-        <ProductListItem />
+        <ProductListItem searchQuery={searchQuery} />
       </View>
     </ScrollView>
   );
