@@ -32,6 +32,8 @@ export type Alamat = {
 
 export type Keranjang = {
     BarangID : string,
+    Jumlah : number,
+    SubTotal : number,
 }
 
 export type Tandai = {

@@ -112,3 +112,34 @@ export async function addKeranjang(BarangID: string) {
     }
 }
 
+export async function addTandai(BarangID: string) {
+    if (!auth.currentUser) {
+      console.error('User not authenticated');
+      return;
+    }
+  
+    const userEmail = auth.currentUser.email;
+    if (!userEmail) {
+      console.error('User email is not available');
+      return;
+    }
+  
+    try {
+      // Membuat referensi koleksi 'DaftarTandai' di bawah dokumen pengguna yang sesuai dengan email
+      const tandaiCollectionRef = collection(fs, 'Pengguna', userEmail, 'DaftarTandai');
+  
+      // Data tanda yang akan ditambahkan
+      const tandaiData = {
+        BarangID: BarangID,
+      };
+  
+      // Menambahkan dokumen baru ke koleksi 'DaftarTandai'
+      await addDoc(tandaiCollectionRef, tandaiData);
+      console.log('Barang added to tanda successfully');
+    } catch (error) {
+      console.error('Error adding tanda:', error);
+    }
+  }
+  
+
+

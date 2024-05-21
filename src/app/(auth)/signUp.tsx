@@ -24,7 +24,7 @@ const SignUp = () => {
     try {
       await setDoc(doc(fs, "Pengguna", email), {
         email: email,
-        username: username,
+        Username: username,
       });
       alert("Akun Berhasil Dibuat!");
       router.push("/signIn");

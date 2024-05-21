@@ -43,10 +43,6 @@ export async function readAllBarang() {
   }
 }
 
-// Contoh panggilan fungsi readAllBarang
-//readAllBarang();
-
-// membuat fungsi updateStok
 
 export async function updateStok(BarangID: string, Stok: number) {
   if (!auth.currentUser) {
