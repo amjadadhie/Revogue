@@ -4,22 +4,25 @@ import React from "react";
 
 type ButtonProps = {
   text: string;
-  style?: ViewStyle; // Add style prop to the ButtonProps type
+  style?: ViewStyle;
+  onPress?: () => void;
 } & React.ComponentPropsWithoutRef<typeof Pressable>;
 
-const Button = forwardRef<View | null, ButtonProps>(
-  ({ text, style, ...pressableProps }, ref) => {
+const Button: React.FC<ButtonProps>= ({
+  text,
+  style,
+  onPress,
+}) => {
+
     return (
       <Pressable
-        ref={ref}
-        {...pressableProps}
+        onPress={onPress}
         style={[styles.container, style]}
       >
         <Text style={styles.text}>{text}</Text>
       </Pressable>
     );
-  }
-);
+  };
 
 const styles = StyleSheet.create({
   container: {

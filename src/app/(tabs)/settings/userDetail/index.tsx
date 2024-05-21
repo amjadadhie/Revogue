@@ -1,39 +1,90 @@
-import React, { useState } from "react";
-import { StyleSheet, Image, Text, View, ScrollView } from "react-native";
-import ProductListItem from "../../../../components/clothesBox";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, Pressable } from "react-native";
+import Entypo from "@expo/vector-icons/Entypo";
+import { router } from "expo-router";
+import Field from "@/src/components/field";
+import { readUser } from "@/src/api/UserCRUD";
+import DateField from "@/src/components/datePicker";
+import Button from "@/src/components/button";
 
-export default function userDetail() {
+export default function UserDetail() {
+  const [name, setName] = useState("");
+  const [nomorHP, setNomorHP] = useState("");
+  const [date, setDate] = useState<Date>(new Date()); // Provide a default value
+
+  const [userData, setUserData] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = await readUser();
+      setUserData(user);
+    };
+
+    fetchUserData();
+  }, []);
+
   return (
-    <ScrollView style={styles.page}>
+    <View style={styles.page}>
       <View style={styles.container1}>
-        <Text style={styles.title}>My Cart</Text>
+        <Pressable
+          style={styles.chevronContainer}
+          onPress={() => router.back()}
+        >
+          <Entypo name="chevron-left" size={24} color="black" />
+        </Pressable>
+        <Text style={styles.title}>User Detail</Text>
       </View>
-      <View style={styles.boxContainer}>
-        <ProductListItem likedOnly={true} />
+      <View style={styles.form}>
+        <Field
+          label="Name"
+          onChange={setName}
+          placeholder={userData ? userData.NamaPengguna : "Name"}
+        />
+        <Field
+          label="Phone Number"
+          onChange={setNomorHP}
+          placeholder={userData ? userData.NomorHP : "Phone Number"}
+        />
+        <DateField label="Date Of Birth" value={date} onChange={setDate} />
       </View>
-    </ScrollView>
+      <Button text="Save Change" style={styles.button} />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    paddingTop: 72,
+    paddingTop: 24,
     paddingBottom: 72,
-    paddingRight: 26,
-    paddingLeft: 26,
     backgroundColor: "#FAFAFA",
   },
   container1: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems: "center",
+    justifyContent: "center",
+    borderBottomWidth: 2,
+    borderColor: "#D9D9D9",
+    paddingBottom: 16,
+    position: "relative",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     color: "#000",
   },
-  boxContainer: {
-    marginTop: 8,
+  chevronContainer: {
+    position: "absolute",
+    left: 12,
+  },
+  form: {
+    flexDirection: "column",
+    paddingHorizontal: 16,
+    paddingTop: 32,
+    paddingBottom: 10,
+  },
+  button: {
+    marginTop: 48,
+    marginHorizontal: "auto",
   },
 });

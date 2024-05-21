@@ -88,26 +88,26 @@ export default function SettingsPage() {
       </View>
       <SettingsButton
         href="/settings/userDetail"
-        source="../../../../assets/icon/Article.svg"
+        source={require("../../../../assets/icon/Article.png")}
         title="User Details"
       />
       <SettingsButton
         href="/settings/userDetail"
-        source="../../../../assets/icon/lock.svg"
+        source={require("../../../../assets/icon/lock.png")}
         title="Change Password"
       />
       <SettingsButton
         href="/settings/userDetail"
-        source="../../../../assets/icon/map-pin.svg"
+        source={require("../../../../assets/icon/map-pin.png")}
         title="Address Book"
       />
       <SettingsButton
         href="/settings/userDetail"
-        source="../../../../assets/icon/Bag.svg"
+        source={require("../../../../assets/icon/Bag.png")}
         title="My Orders"
       />
       <SettingsButton
-        source="../../../../assets/icon/log-out.svg"
+        source={require("../../../../assets/icon/log-out.png")}
         onPress={handleSignOut}
         title="Sign Out"
       />

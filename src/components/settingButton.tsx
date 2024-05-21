@@ -42,8 +42,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16, // Add padding for spacing
   },
   icon: {
-    width: 20,
-    height: 20,
+    width: 18,
+    height: 18,
     marginRight: 8, // Add margin to separate icon and text
   },
   chevronContainer: {
