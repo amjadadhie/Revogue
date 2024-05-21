@@ -6,7 +6,8 @@ export type Barang = {
     Foto: string;
     Deskripsi: string;
     Stok: number;
-    NamaToko: string
+    NamaToko: string,
+    NamaPengguna: string,
 }
 
 export type Pengguna = {
@@ -15,6 +16,8 @@ export type Pengguna = {
     TanggalLahir: Date,
     JenisKelamin: string,
     NomorTelepon: string,
+    NamaToko: string,
+    Foto:string,
 }
 
 export type Alamat = {

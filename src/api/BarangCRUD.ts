@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { fs, auth } from "../constants/firebaseConfig"; // Import konfigurasi Firestore
+import { fs, auth, storage } from "../constants/firebaseConfig"; // Import konfigurasi Firestore
 import { collection, doc, onSnapshot } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Barang } from "../type";
 import {
   addDoc,
@@ -133,38 +134,94 @@ export async function filterBarangByHarga(
     return [];
   }
 }
-// ini fungsi returnnya mirip sama readAllBarang
 
-export async function searchBarangByName(
-  namaBarang: string
-): Promise<Barang[]> {
-  if (!auth.currentUser) {
-    console.error("User not authenticated");
-    return [];
-  }
-
+export async function addBarang(
+  BarangID: string,
+  NamaBarang: string,
+  Kategori: string,
+  Harga: number,
+  file: File, // Menggunakan file sebagai parameter untuk upload gambar
+  Deskripsi: string,
+  Stok: number,
+  NamaToko: string,
+  NamaPengguna: string,
+): Promise<void> {
   try {
-    // Membuat referensi ke koleksi 'Barang'
-    const barangCollectionRef = collection(fs, "Barang");
+    // Membuat referensi koleksi 'Barang'
+    const barangCollectionRef = collection(fs, 'Barang');
 
-    // Membuat query untuk mencari barang berdasarkan nama
-    const q = query(barangCollectionRef, where("NamaBarang", "==", namaBarang));
+    // Upload gambar ke Firebase Storage
+    const storageRef = ref(storage, `Barang/${BarangID}/${file.name}`);
+    await uploadBytes(storageRef, file);
+    const Foto = await getDownloadURL(storageRef);
 
-    // Mendapatkan dokumen yang memenuhi kriteria query
-    const querySnapshot = await getDocs(q);
+    // Data barang yang akan ditambahkan
+    const newBarang: Barang = {
+      BarangID,
+      NamaBarang,
+      Kategori,
+      Harga,
+      Foto, // URL gambar yang diunggah
+      Deskripsi,
+      Stok,
+      NamaToko,
+      NamaPengguna,
+    };
 
-    // Mendefinisikan array untuk menyimpan data barang yang sesuai
-    const searchResults: Barang[] = [];
+    // Menambahkan dokumen baru ke koleksi 'Barang' dengan data barang baru
+    await addDoc(barangCollectionRef, newBarang);
 
-    // Mengiterasi dan mengonversi setiap dokumen menjadi tipe Barang
-    querySnapshot.forEach((doc) => {
-      const barangData = doc.data() as Barang; // Mengonversi data menjadi tipe Baranwg
-      searchResults.push(barangData); // Menyimpan data barang dalam array
-    });
-
-    return searchResults;
+    console.log('Barang added successfully');
   } catch (error) {
-    console.error("Error searching barang by name:", error);
-    return [];
+    console.error('Error adding barang:', error);
+  }
+}
+
+export async function editBarang(
+  BarangID: string,
+  NamaBarang: string,
+  Kategori: string,
+  Harga: number,
+  file: File | null, // File gambar baru atau null jika tidak ada perubahan gambar
+  Deskripsi: string,
+  Stok: number,
+  NamaToko: string,
+  NamaPengguna: string,
+): Promise<void> {
+  try {
+    // Membuat referensi dokumen barang berdasarkan BarangID
+    const barangDocRef = doc(fs, 'Barang', BarangID);
+
+    // Mengambil data barang saat ini
+    const barangDocSnap = await getDoc(barangDocRef);
+    if (!barangDocSnap.exists()) {
+      console.error('Barang tidak ditemukan');
+      return;
+    }
+
+    // Data barang yang akan diupdate
+    let updatedData: Partial<Barang> = {
+      NamaBarang,
+      Kategori,
+      Harga,
+      Deskripsi,
+      Stok,
+      NamaToko,
+      NamaPengguna,
+    };
+
+    // Upload gambar baru jika diberikan
+    if (file) {
+      const storageRef = ref(storage, `Barang/${BarangID}/${file.name}`);
+      await uploadBytes(storageRef, file);
+      const Foto = await getDownloadURL(storageRef);
+      updatedData = { ...updatedData, Foto }; // Menambahkan URL gambar baru ke data yang diupdate
+    }
+
+    // Mengupdate dokumen barang dengan data yang baru
+    await updateDoc(barangDocRef, updatedData);
+    console.log('Barang updated successfully');
+  } catch (error) {
+    console.error('Error updating barang:', error);
   }
 }
