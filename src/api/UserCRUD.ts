@@ -70,11 +70,11 @@ export const changePassword = async () => {
 
 export async function editPengguna(
     Email: string,
-    NamaToko: string,
-    NamaPengguna: string,
-    TanggalLahir: Date,
-    JenisKelamin: string,
-    NomorTelepon: string
+    NamaToko: string | null,
+    NamaPengguna: string| null,
+    TanggalLahir: Date| null,
+    JenisKelamin: string| null,
+    NomorTelepon: string| null,
   ): Promise<void> {
     if (!auth.currentUser) {
       console.error('User not authenticated');

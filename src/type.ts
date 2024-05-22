@@ -12,12 +12,12 @@ export type Barang = {
 
 export type Pengguna = {
     Email : string,
-    NamaPengguna: string,
-    TanggalLahir: Date,
-    JenisKelamin: string,
-    NomorTelepon: string,
-    NamaToko: string | null,
-    Foto:string,
+    NamaPengguna: string | null,
+    TanggalLahir: Date| null,
+    JenisKelamin: string| null,
+    NomorTelepon: string| null,
+    NamaToko: string | null| null,
+    Foto:string| null,
 }
 
 export type Alamat = {
