@@ -16,7 +16,7 @@ export type Pengguna = {
     TanggalLahir: Date,
     JenisKelamin: string,
     NomorTelepon: string,
-    NamaToko: string,
+    NamaToko: string | null,
     Foto:string,
 }
 

@@ -1,11 +1,18 @@
 import React from "react";
-import { View, StyleSheet, Pressable, Image, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Pressable,
+  Image,
+  Text,
+  ImageSourcePropType,
+} from "react-native";
 import { Link } from "expo-router";
 import Entypo from "@expo/vector-icons/Entypo";
 
 interface SettingsButtonProps {
   href?: string;
-  source: string; // This will be a URI string now
+  source: ImageSourcePropType; // This will be a URI string now
   title: string;
   onPress?: () => void;
 }
@@ -20,7 +27,7 @@ const SettingsButton: React.FC<SettingsButtonProps> = ({
     <Pressable onPress={onPress}>
       <Link href={href} asChild>
         <Pressable style={styles.linkContainer}>
-          <Image source={{ uri: source }} style={styles.icon} />
+          <Image source={source} style={styles.icon} />
           <Text>{title}</Text>
           <View style={styles.chevronContainer}>
             <Entypo name="chevron-right" size={24} color="black" />
