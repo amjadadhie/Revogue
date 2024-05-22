@@ -25,6 +25,11 @@ const SignUp = () => {
       await setDoc(doc(fs, "Pengguna", email), {
         Email: email,
         Username: username,
+        Foto: null,
+        NamaPengguna: null,
+        TanggalLahir: null,
+        NamaToko: null,
+        JenisKelamin: null,
       });
       alert("Akun Berhasil Dibuat!");
       router.push("/signIn");
