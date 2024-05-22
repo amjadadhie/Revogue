@@ -92,7 +92,7 @@ export default function SettingsPage() {
         title="User Details"
       />
       <SettingsButton
-        href="/settings/userDetail"
+        href="/settings/changePassword"
         source={require("../../../../assets/icon/lock.png")}
         title="Change Password"
       />
