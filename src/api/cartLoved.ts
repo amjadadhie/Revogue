@@ -9,46 +9,43 @@ import {
   } from "@firebase/firestore"; // Import the 'collection' method from 'firebase/firestore'
 import { useState, useEffect } from "react";
 
-export async function readKeranjang(): Promise<Keranjang[] | void> {
+export async function readKeranjang(): Promise<Keranjang[]> {
     if (!auth.currentUser) {
         console.error('User not authenticated');
-        return;
+        return [];
     }
 
     const userEmail = auth.currentUser.email;
     if (!userEmail) {
         console.error('User email is not available');
-        return;
+        return [];
     }
 
     try {
-        // Mengambil dokumen pengguna berdasarkan email
         const currentUserDocRef = doc(fs, 'Pengguna', userEmail);
         const currentUserDocSnap = await getDoc(currentUserDocRef);
 
         if (currentUserDocSnap.exists()) {
-            // Jika dokumen pengguna ada, coba mengambil daftar keranjang pengguna
             const keranjangCollectionRef = collection(currentUserDocRef, 'DaftarKeranjang');
             const keranjangQuerySnapshot = await getDocs(keranjangCollectionRef);
-            
-            const keranjangList: Keranjang[] = [];
 
-            // Mendefinisikan array untuk menyimpan data keranjang
+            const keranjangList: Keranjang[] = [];
             keranjangQuerySnapshot.forEach((keranjangDoc) => {
                 const keranjangData = keranjangDoc.data() as Keranjang;
                 keranjangList.push(keranjangData);
-                console.log('BarangID:', keranjangData.BarangID);
-                console.log('---------------------------------');
             });
 
-            return keranjangList; // Mengembalikan daftar keranjang
+            return keranjangList;
         } else {
             console.log('User document does not exist');
+            return [];
         }
     } catch (error) {
         console.error('Error reading keranjang:', error);
+        return [];
     }
 }
+
 
 export async function readTandai(): Promise<Tandai[] | void> {
     if (!auth.currentUser) {
