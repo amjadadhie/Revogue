@@ -26,7 +26,7 @@ export default function changePassword() {
   }, []);
 
   const handleUpdate = async () => {
-    if (userData.Password != ) {
+    if (userData.Password != currentPassword) {
       Alert.alert("Error", "User data is not loaded yet.");
       return;
     }
