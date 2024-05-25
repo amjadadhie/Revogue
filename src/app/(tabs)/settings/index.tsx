@@ -107,6 +107,11 @@ export default function SettingsPage() {
         title="My Orders"
       />
       <SettingsButton
+        href="/settings/userDetail"
+        source={require("../../../../assets/icon/store.png")}
+        title="My Store"
+      />
+      <SettingsButton
         source={require("../../../../assets/icon/log-out.png")}
         onPress={handleSignOut}
         title="Sign Out"
