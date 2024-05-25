@@ -107,7 +107,7 @@ export default function SettingsPage() {
         title="My Orders"
       />
       <SettingsButton
-        href="/settings/userDetail"
+        href="/settings/userStore"
         source={require("../../../../assets/icon/store.png")}
         title="My Store"
       />
