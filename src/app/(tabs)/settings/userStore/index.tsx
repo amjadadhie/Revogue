@@ -44,42 +44,48 @@ export default function UserStore() {
             Alert.alert("Error", "Failed to update user information.");
         }
     }
-    
-
-    /// return jika belum ada toko
-    // return (
-    //     <View style={styles.page}>
-    //         <View style={styles.container1}>
-    //             <Pressable
-    //                 style={styles.chevronContainer}
-    //                 onPress={() => router.back()}
-    //             >
-    //                 <Entypo name="chevron-left" size={24} color="black" />
-    //             </Pressable>
-    //             <Text style={styles.title}>Add Store</Text>
-    //         </View>
-    //         <View style={styles.form}>
-    //             <Field
-    //                 label="Store Name"
-    //                 onChange={(value) => setToko(value)}
-    //                 placeholder={"Store Name"}
-    //             />
-    //             <Button text="Add Store" onPress={handleAddStore} style={styles.button} />
-    //         </View>
-    //     </View>
-    // );
-
-    /// return jika sudah ada toko
-    return(
-        <ScrollView style={styles.page}>
-      <View style={styles.container1}>
-        <Text style={styles.title}>Your Products</Text>
-      </View>
-      <View style={styles.boxContainer}>
-        /// isi dengan data produk
-      </View>
-    </ScrollView>
-    )
+    if (!userData) {
+      // Return loading indicator or empty view while user data is being fetched
+      return <View style={styles.loading}><Text>Loading...</Text></View>;
+  }
+    // if user.namatoko == null 
+    if (userData.NamaToko == null) {
+      return (
+          <View style={styles.page}>
+              <View style={styles.container1}>
+                  <Pressable
+                      style={styles.chevronContainer}
+                      onPress={() => router.back()}
+                  >
+                      <Entypo name="chevron-left" size={24} color="black" />
+                  </Pressable>
+                  <Text style={styles.title}>Add Store</Text>
+              </View>
+              <View style={styles.form}>
+                  <Field
+                      label="Store Name"
+                      onChange={(value) => setToko(value)}
+                      placeholder={"Store Name"}
+                  />
+                  <Button text="Add Store" onPress={handleAddStore} style={styles.button} />
+              </View>
+          </View>
+      );
+  } else {
+      return (
+          <ScrollView style={styles.page}>
+              <View style={styles.container1}>
+                  <Text style={styles.title}>Your Products</Text>
+              </View>
+              <View style={styles.boxContainer}>
+                  {/* isi dengan data produk */}
+                  <Text>Product 1</Text>
+                  <Text>Product 2</Text>
+                  {/* Anda dapat mengganti dengan komponen atau data produk nyata */}
+              </View>
+          </ScrollView>
+      );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -125,7 +131,12 @@ const styles = StyleSheet.create({
     },
     boxContainer: {
         marginTop: 8,
-      }
+      },
+      loading: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    }
   });
   
   const pickerSelectStyles = StyleSheet.create({

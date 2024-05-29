@@ -7,6 +7,7 @@ import { readUser, editPengguna } from "@/src/api/UserCRUD";
 import DateField from "@/src/components/datePicker";
 import Button from "@/src/components/button";
 import RNPickerSelect from "react-native-picker-select";
+import { gantiPassword } from "@/src/api/UserCRUD";
 
 export default function changePassword() {
   const [currentPassword, setcurrentPassword] = useState("");
@@ -32,13 +33,11 @@ export default function changePassword() {
     }
 
     try {
-      await changePassword(
-        
-      );
-      Alert.alert("Success", "User information updated successfully.");
+      await gantiPassword(currentPassword, newPassword,confirmPassword);
+      Alert.alert("Success", "User password updated successfully.");
     } catch (error) {
-      console.error("Error updating user information:", error);
-      Alert.alert("Error", "Failed to update user information.");
+      console.error("Error updating user password:", error);
+      Alert.alert("Error", "Failed to update user password.");
     }
   };
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { auth, updatePassword, fs, storage } from '../constants/firebaseConfig'; // Import konfigurasi Firestore
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
+import { auth, fs } from '../constants/firebaseConfig'; // Import konfigurasi Firestore
 import { Pengguna } from "../type";
 import {
     addDoc,
@@ -50,19 +50,30 @@ export async function readUser(): Promise<Pengguna | null> {
     }
 }
 
-export const changePassword = async () => {
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmNewPassword, setConfirmNewPassword] = useState('');
-  const [error, setError] = useState('');
+export async function gantiPassword (
+  currentPassword: string,
+  newPassword: string,
+  confirmNewPassword: string,
+): Promise<void> {
+    
+  if (!auth.currentUser) {
+    console.error("User not authenticated");
+    return;
+  }
+
+  const user = auth.currentUser;
+  const credential = EmailAuthProvider.credential(user.email!, currentPassword);
+
+  try {
+    // Re-authenticate the user with the current password
+    await reauthenticateWithCredential(user, credential);
     if(newPassword !== confirmNewPassword){
-        setError('Password baru dan konfirmasi password baru tidak sama');
-        return;
-    }
-    try {
-        if (auth.currentUser) {
-            await updatePassword(auth.currentUser, newPassword);
-            alert('Password updated!');
-        }
+      console.error("New password does not match");      
+      return;
+  }
+    // If re-authentication is successful, update the password
+    await updatePassword(user, newPassword);
+    console.log('Password updated successfully!');
     } catch (error) {
         console.error("Error updating password: ", error);
     }
