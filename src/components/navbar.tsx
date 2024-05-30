@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Pressable, StyleSheet } from "react-native";
 import { Link, useSegments } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Feather from "@expo/vector-icons/Feather";
@@ -15,40 +15,40 @@ const Navbar = () => {
   return (
     <View style={styles.navbar}>
       <Link href="/home" asChild>
-        <TouchableOpacity>
+        <Pressable>
           <Feather
             name="home"
             size={24}
             color={isActive("home") ? "black" : "#949494"}
           />
-        </TouchableOpacity>
+        </Pressable>
       </Link>
       <Link href="/favorite" asChild>
-        <TouchableOpacity>
+        <Pressable>
           <FontAwesome5
             name="heart"
             size={24}
             color={isActive("favorite") ? "black" : "#949494"}
           />
-        </TouchableOpacity>
+        </Pressable>
       </Link>
       <Link href="/cart" asChild>
-        <TouchableOpacity>
+        <Pressable>
           <Feather
             name="shopping-cart"
             size={24}
             color={isActive("cart") ? "black" : "#949494"}
           />
-        </TouchableOpacity>
+        </Pressable>
       </Link>
       <Link href="/settings" asChild>
-        <TouchableOpacity>
+        <Pressable>
           <Feather
             name="user"
             size={28}
             color={isActive("settings") ? "black" : "#949494"}
           />
-        </TouchableOpacity>
+        </Pressable>
       </Link>
     </View>
   );

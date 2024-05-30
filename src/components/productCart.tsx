@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Image, Pressable, StyleSheet } from "react-native";
 import { Barang } from "../type";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
@@ -32,17 +32,17 @@ export default function ProductCart({ product }: ProductCartProps) {
       </View>
       <View style={styles.buttonContainer}>
         <View style={styles.quantityContainer}>
-          <TouchableOpacity onPress={decrementQuantity}>
+          <Pressable onPress={decrementQuantity}>
             <AntDesign name="minuscircle" size={24} color="black" />
-          </TouchableOpacity>
+          </Pressable>
           <Text style={styles.quantity}>{quantity}</Text>
-          <TouchableOpacity onPress={incrementQuantity}>
+          <Pressable onPress={incrementQuantity}>
             <AntDesign name="pluscircle" size={24} color="black" />
-          </TouchableOpacity>
+          </Pressable>
         </View>
-        <TouchableOpacity onPress={() => {}} style={styles.removeButton}>
+        <Pressable onPress={() => {}} style={styles.removeButton}>
           <AntDesign name="close" size={18} color="black" />
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </View>
   );
