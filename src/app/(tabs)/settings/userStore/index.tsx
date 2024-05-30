@@ -7,6 +7,7 @@ import { readUser, editPengguna } from "@/src/api/UserCRUD";
 import DateField from "@/src/components/datePicker";
 import Button from "@/src/components/button";
 import RNPickerSelect from "react-native-picker-select";
+import { useNavigation } from '@react-navigation/native';
 
 export default function UserStore() {
     const [toko, setToko] = useState("");
@@ -28,11 +29,11 @@ export default function UserStore() {
             Alert.alert("Error", "User data is not loaded yet.");
             return;
         }
-
+        
         try {
             await editPengguna(
                 userData.Email,
-                userData.NamaToko,
+                toko,
                 userData.Nama,
                 userData.TanggalLahir,
                 userData.JenisKelamin,

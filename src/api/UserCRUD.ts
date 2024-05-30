@@ -97,13 +97,13 @@ export async function editPengguna(
       const penggunaDocRef = doc(fs, 'Pengguna', Email);
   
       // Data pengguna yang akan diupdate tanpa mengubah foto
-      const updatedData: Partial<Pengguna> = {
-        NamaPengguna,
-        TanggalLahir,
-        JenisKelamin,
-        NomorTelepon,
-        NamaToko,
-      };
+      const updatedData: Partial<Pengguna> = {};
+
+        if (NamaPengguna !== undefined) updatedData.NamaPengguna = NamaPengguna;
+        if (TanggalLahir !== undefined) updatedData.TanggalLahir = TanggalLahir;
+        if (JenisKelamin !== undefined) updatedData.JenisKelamin = JenisKelamin;
+        if (NomorTelepon !== undefined) updatedData.NomorTelepon = NomorTelepon;
+        if (NamaToko !== undefined) updatedData.NamaToko = NamaToko;
   
       // Mengupdate dokumen pengguna dengan data yang baru
       await updateDoc(penggunaDocRef, updatedData);
