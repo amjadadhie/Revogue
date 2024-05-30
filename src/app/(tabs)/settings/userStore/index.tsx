@@ -15,6 +15,7 @@ import DateField from "@/src/components/datePicker";
 import Button from "@/src/components/button";
 import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
+import ProductListItem from "../../../../components/clothesBoxStore";
 
 export default function UserStore() {
   const [toko, setToko] = useState("");
@@ -98,10 +99,7 @@ export default function UserStore() {
           <Text style={styles.title}>Your Products</Text>
         </View>
         <View style={styles.boxContainer}>
-          {/* isi dengan data produk */}
-          <Text>Product 1</Text>
-          <Text>Product 2</Text>
-          {/* Anda dapat mengganti dengan komponen atau data produk nyata */}
+          <ProductListItem userStoreName={userData.NamaToko} />
         </View>
       </ScrollView>
     );
