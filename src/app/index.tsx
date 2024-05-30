@@ -3,12 +3,10 @@ import {
   View,
   StyleSheet,
   ImageBackground,
-  Button,
   Image,
 } from "react-native";
 import React from "react";
 import { Link } from "expo-router";
-import Icon from "react-native-vector-icons/FontAwesome"; // Import the Icon component
 
 const LandingPage = () => {
   return (
