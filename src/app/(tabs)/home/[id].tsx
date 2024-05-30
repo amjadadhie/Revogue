@@ -16,7 +16,12 @@ import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Modal from "react-native-modal";
-import { addKeranjang } from "@/src/api/cartLoved"; // Update the path
+import {
+  addKeranjang,
+  addTandai,
+  deleteTandai,
+  readTandai,
+} from "@/src/api/cartLoved"; // Update the path
 
 const ProductDetailsScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -28,12 +33,22 @@ const ProductDetailsScreen = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const [quantity, setQuantity] = useState<number>(1);
+  const [likedItems, setLikedItems] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const barangData = (await readBarangByID(id)) as Barang;
         setProduct(barangData);
+
+        const tandaiData = await readTandai();
+        if (tandaiData) {
+          const likedItemsMap = tandaiData.reduce((acc, item) => {
+            acc[item.BarangID] = true;
+            return acc;
+          }, {} as { [key: string]: boolean });
+          setLikedItems(likedItemsMap);
+        }
       } catch (error) {
         console.error("Error fetching product:", error);
       } finally {
@@ -43,6 +58,22 @@ const ProductDetailsScreen = () => {
 
     fetchData();
   }, [id]);
+
+  const handleLike = async (id: string) => {
+    try {
+      if (likedItems[id]) {
+        await deleteTandai(id);
+      } else {
+        await addTandai(id);
+      }
+      setLikedItems((prevLikedItems) => ({
+        ...prevLikedItems,
+        [id]: !prevLikedItems[id],
+      }));
+    } catch (error) {
+      console.error("Error handling like:", error);
+    }
+  };
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -89,8 +120,26 @@ const ProductDetailsScreen = () => {
           <Entypo name="chevron-left" size={28} color="black" />
         </Pressable>
         <View style={styles.iconContainer2}>
-          <FontAwesome6 name="heart" size={24} color="black" />
-          <MaterialCommunityIcons name="cart-outline" size={24} color="black" />
+          <Pressable onPress={() => handleLike(product.BarangID)}>
+            {likedItems[product.BarangID] ? (
+              <Image
+                source={require("../../../../assets/home/heart-fill.png")}
+                style={styles.heartIcon}
+              />
+            ) : (
+              <Image
+                source={require("../../../../assets/home/heart.png")}
+                style={styles.heartIcon}
+              />
+            )}
+          </Pressable>
+          <Link href={"/cart"}>
+            <MaterialCommunityIcons
+              name="cart-outline"
+              size={24}
+              color="black"
+            />
+          </Link>
         </View>
       </View>
       <Image
@@ -109,14 +158,15 @@ const ProductDetailsScreen = () => {
           <Text style={styles.descriptionText}>{product.Deskripsi}</Text>
         </View>
         <View style={styles.buttonContainer}>
-          <Pressable style={styles.buyContainer} onPress={toggleModal}>
-            <Text style={styles.addText}>+</Text>
-          </Pressable>
-          <Button text="Buy Now" onPress={toggleModal} />
+          <Button
+            text="Add To Cart"
+            onPress={handleAddToCart}
+            style={{ width: 340 }}
+          />
         </View>
       </View>
 
-      <Modal isVisible={isModalVisible} onBackdropPress={toggleModal}>
+      {/* <Modal isVisible={isModalVisible} onBackdropPress={toggleModal}>
         <View style={styles.modalContent}>
           <Pressable style={styles.closeButton} onPress={toggleModal}>
             <Text>X</Text>
@@ -138,7 +188,7 @@ const ProductDetailsScreen = () => {
           </View>
           <Button text="Confirm" onPress={handleAddToCart} />
         </View>
-      </Modal>
+      </Modal> */}
     </View>
   );
 };
@@ -161,6 +211,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
     zIndex: 2,
+  },
+  heartIcon: {
+    height: 24,
+    width: 24,
   },
   iconContainer2: {
     flexDirection: "row",
@@ -216,6 +270,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
+    justifyContent: "center",
     marginTop: 40,
     gap: 24,
   },

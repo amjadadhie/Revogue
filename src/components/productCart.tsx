@@ -1,33 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, Pressable, StyleSheet } from "react-native";
-import { Barang } from "../type";
+import { Barang, Keranjang } from "../type";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { addKeranjang, reduceKeranjang } from "../api/cartLoved";
+import Checkbox from "expo-checkbox"; // Ensure this is correctly imported
 
 interface ProductCartProps {
   product: Barang;
+  keranjang: Keranjang;
+  isSelected: boolean;
+  onSelect: () => void;
 }
 
-export default function ProductCart({ product }: ProductCartProps) {
-  const [quantity, setQuantity] = useState(1);
+export default function ProductCart({
+  product,
+  keranjang,
+  isSelected,
+  onSelect,
+}: ProductCartProps) {
+  const [quantity, setQuantity] = useState(keranjang.Jumlah);
 
-  const incrementQuantity = () => {
+  const incrementQuantity = async () => {
     setQuantity(quantity + 1);
+    await addKeranjang(product.BarangID, product.Harga);
   };
 
-  const decrementQuantity = () => {
+  const decrementQuantity = async () => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
+      await reduceKeranjang(product.BarangID, product.Harga);
     }
   };
 
   return (
     <View style={styles.productContainer}>
+      <Checkbox value={isSelected} onValueChange={onSelect} color={"black"} />
       <Image source={{ uri: product.Foto }} style={styles.image} />
       <View style={styles.details}>
         <Text style={styles.productName}>{product.NamaBarang}</Text>
         <Text style={styles.productBrand}>{product.NamaToko}</Text>
         <Text style={styles.productPrice}>
-          {`Rp${product.Harga.toLocaleString()}`}
+          {`Rp${(product.Harga * quantity).toLocaleString()}`}
         </Text>
       </View>
       <View style={styles.buttonContainer}>
@@ -98,6 +111,6 @@ const styles = StyleSheet.create({
   },
   removeButtonText: {
     fontSize: 18,
-    color: "#black",
+    color: "black",
   },
 });
