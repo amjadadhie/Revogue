@@ -15,7 +15,7 @@ export type Pengguna = {
   NamaPengguna: string | null;
   JenisKelamin: string | null;
   NomorTelepon: string | null;
-  NamaToko: string | null | null;
+  NamaToko: string | null;
   Foto: string | null;
 };
 

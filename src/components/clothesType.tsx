@@ -1,7 +1,7 @@
 import React from "react";
 import {
   StyleSheet,
-  TouchableOpacity,
+  Pressable,
   Image,
   ImageSourcePropType,
   Text,
@@ -21,9 +21,9 @@ const TypeFilter: React.FC<FilterButtonProps> = ({
 }) => {
   return (
     <View>
-      <TouchableOpacity onPress={onPress} style={styles.filterButton}>
+      <Pressable onPress={onPress} style={styles.filterButton}>
         <Image source={imageSource} style={styles.filterImage} />
-      </TouchableOpacity>
+      </Pressable>
       <View style={styles.textContainer}>
         <Text style={styles.text}>{text}</Text>
       </View>

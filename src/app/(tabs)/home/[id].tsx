@@ -7,7 +7,6 @@ import {
   Dimensions,
   Pressable,
   TextInput,
-  TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Button from "../../../components/button";
@@ -124,24 +123,18 @@ const ProductDetailsScreen = () => {
           </Pressable>
           <Text style={styles.modalTitle}>Select Quantity</Text>
           <View style={styles.quantityContainer}>
-            <TouchableOpacity
-              onPress={handleDecrement}
-              style={styles.quantityButton}
-            >
+            <Pressable onPress={handleDecrement} style={styles.quantityButton}>
               <Text style={styles.quantityButtonText}>-</Text>
-            </TouchableOpacity>
+            </Pressable>
             <TextInput
               style={styles.quantityInput}
               keyboardType="numeric"
               value={quantity.toString()}
               onChangeText={(text) => setQuantity(Number(text))}
             />
-            <TouchableOpacity
-              onPress={handleIncrement}
-              style={styles.quantityButton}
-            >
+            <Pressable onPress={handleIncrement} style={styles.quantityButton}>
               <Text style={styles.quantityButtonText}>+</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
           <Button text="Confirm" onPress={handleAddToCart} />
         </View>

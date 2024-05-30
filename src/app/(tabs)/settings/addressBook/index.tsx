@@ -7,10 +7,16 @@ import {
   Text,
   TextInput,
   Modal,
+  ScrollView,
 } from "react-native";
 import Entypo from "@expo/vector-icons/Entypo";
 import AddressCard from "@/src/components/address";
-import { readAddress, editAddress, addAddress } from "@/src/api/addressBook";
+import {
+  readAddress,
+  editAddress,
+  addAddress,
+  deleteAddress,
+} from "@/src/api/addressBook";
 import { Alamat } from "@/src/type";
 import Button from "@/src/components/button";
 
@@ -20,6 +26,7 @@ const AddressModal = ({
   address,
   onSave,
   isEditing,
+  onDelete,
 }: any) => {
   const [editedAddress, setEditedAddress] = useState<Alamat>(
     address || { NamaAlamat: "", NamaJalan: "", DetailAlamat: "", KodePos: "" }
@@ -41,6 +48,13 @@ const AddressModal = ({
     onClose();
   };
 
+  const handleDelete = () => {
+    if (address) {
+      onDelete(address.NamaAlamat);
+    }
+    onClose();
+  };
+
   return (
     <Modal
       animationType="none"
@@ -58,38 +72,60 @@ const AddressModal = ({
           </Text>
           <TextInput
             style={styles.input}
-            placeholder="Address Title (Ex: Rumah, Kos)"
-            value={editedAddress.NamaAlamat}
+            placeholder={
+              isEditing
+                ? editedAddress.NamaAlamat
+                : "Address Title (Ex: Rumah, Kos)"
+            }
             onChangeText={(text) =>
               setEditedAddress({ ...editedAddress, NamaAlamat: text })
             }
           />
           <TextInput
             style={styles.input}
-            placeholder="Street (Ex: JL.Kayu No.1)"
-            value={editedAddress.NamaJalan}
+            placeholder={
+              isEditing ? editedAddress.NamaJalan : "Street (Ex: JL.Kayu No.1)"
+            }
             onChangeText={(text) =>
               setEditedAddress({ ...editedAddress, NamaJalan: text })
             }
           />
           <TextInput
             style={styles.input}
-            placeholder="Detail (Ex: Kecamatan, Kabupaten)"
-            value={editedAddress.DetailAlamat}
+            placeholder={
+              isEditing
+                ? editedAddress.DetailAlamat
+                : "Detail (Ex: Kecamatan, Kabupaten)"
+            }
             onChangeText={(text) =>
               setEditedAddress({ ...editedAddress, DetailAlamat: text })
             }
           />
           <TextInput
             style={styles.input}
-            placeholder="Postal Code (Ex: 40132)"
-            value={editedAddress.KodePos}
+            placeholder={
+              isEditing ? editedAddress.KodePos : "Postal Code (Ex: 40132)"
+            }
             onChangeText={(text) =>
               setEditedAddress({ ...editedAddress, KodePos: text })
             }
           />
           <View style={styles.buttonContainer}>
-            <Button text="Save" onPress={handleSave} />
+            <Button
+              text="Save"
+              onPress={handleSave}
+              style={{
+                width: 160,
+              }}
+            />
+            <Button
+              text="Delete"
+              onPress={handleDelete}
+              style={{
+                width: 160,
+                backgroundColor: "red",
+              }}
+            />
           </View>
         </View>
       </View>
@@ -146,8 +182,14 @@ export default function AddressBook() {
     setAddresses(updatedAddresses || []);
   };
 
+  const handleDeleteAddress = async (NamaAlamat: string) => {
+    await deleteAddress(NamaAlamat);
+    const updatedAddresses = await readAddress();
+    setAddresses(updatedAddresses || []);
+  };
+
   return (
-    <View style={styles.page}>
+    <ScrollView style={styles.page}>
       <View style={styles.container1}>
         <Pressable
           style={styles.chevronContainer}
@@ -179,8 +221,9 @@ export default function AddressBook() {
         address={selectedAddress}
         onSave={handleSaveAddress}
         isEditing={isEditing}
+        onDelete={handleDeleteAddress}
       />
-    </View>
+    </ScrollView>
   );
 }
 
@@ -211,7 +254,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginHorizontal: "auto",
-    marginTop: 40,
+    marginVertical: 40,
   },
   modalContainer: {
     flex: 1,
@@ -249,8 +292,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonContainer: {
-    flexDirection: "row",
+    flexDirection: "column",
     marginTop: 20,
-    justifyContent: "space-between",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 20,
   },
 });

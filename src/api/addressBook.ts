@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { fs, app, auth } from '../constants/firebaseConfig'; // Import konfigurasi Firestore
-import { collection, addDoc, doc, getDoc, updateDoc, getDocs, query, where} from "@firebase/firestore"; // Import the 'collection' method from 'firebase/firestore'
+import { collection, addDoc, doc, getDoc, updateDoc, getDocs, query, where, deleteDoc} from "@firebase/firestore"; // Import the 'collection' method from 'firebase/firestore'
 import { Alamat } from "../type";
 
 // Mengambil list address akun yang sedang login (baca alamat)
@@ -138,4 +138,38 @@ export async function editAddress(NamaAlamat: string, NamaAlamatBaru: string, Na
 // Contoh panggilan fungsi editAddress untuk mengedit alamat dengan NamaAlamat 'Rumah'
 editAddress('Rumah Lama', 'Rumah Baru', 'Jalan XYZ', 'Dago, Bandung', '67890');
 
+// delete Address 
+export async function deleteAddress(NamaAlamat: string): Promise<void> {
+    if (!auth.currentUser) {
+        console.error('User not authenticated');
+        return;
+    }
+
+    const userEmail = auth.currentUser.email;
+    if (!userEmail) {
+        console.error('User email is not available');
+        return;
+    }
+
+    try {
+        // Membuat referensi koleksi 'AlamatPengguna' di bawah dokumen pengguna yang sesuai dengan email
+        const addressCollectionRef = collection(fs, 'Pengguna', userEmail, 'AlamatPengguna');
+
+        // Membuat query untuk mencari dokumen alamat dengan NamaAlamat yang sesuai
+        const q = query(addressCollectionRef, where('NamaAlamat', '==', NamaAlamat));
+        const querySnapshot = await getDocs(q);
+
+        // Menghapus dokumen alamat yang ditemukan
+        if (!querySnapshot.empty) {
+            querySnapshot.forEach(async (doc) => {
+                await deleteDoc(doc.ref);
+                console.log('Address deleted successfully');
+            });
+        } else {
+            console.log('No address found with the specified Nama Alamat');
+        }
+    } catch (error) {
+        console.error('Error deleting address:', error);
+    }
+}
 
