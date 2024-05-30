@@ -13,7 +13,6 @@ export type Barang = {
 export type Pengguna = {
     Email : string,
     NamaPengguna: string | null,
-    TanggalLahir: Date| null,
     JenisKelamin: string| null,
     NomorTelepon: string| null,
     NamaToko: string | null| null,

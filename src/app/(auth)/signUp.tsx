@@ -27,7 +27,6 @@ const SignUp = () => {
         Username: username,
         Foto: null,
         NamaPengguna: null,
-        TanggalLahir: null,
         NamaToko: null,
         JenisKelamin: null,
       });

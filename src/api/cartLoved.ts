@@ -168,6 +168,22 @@ export async function addTandai(BarangID: string) {
     }
   }
 
+  export async function editKeranjang(
+    BarangID: string,
+    Jumlah: number
+  ): Promise<void> {
+    try {
+      // Membuat referensi dokumen keranjang berdasarkan BarangID
+      const keranjangDocRef = doc(fs, 'Keranjang', BarangID);
+  
+      // Mengupdate dokumen keranjang dengan Jumlah yang baru
+      await updateDoc(keranjangDocRef, { Jumlah });
+      console.log('Jumlah barang dalam keranjang updated successfully');
+    } catch (error) {
+      console.error('Error updating jumlah barang dalam keranjang:', error);
+    }
+  }
+
   export async function deleteTandai(BarangID: string) {
     if (!auth.currentUser) {
       console.error('User not authenticated');
@@ -252,6 +268,6 @@ export async function addTandai(BarangID: string) {
     }
 }
 
-  
+
 
 

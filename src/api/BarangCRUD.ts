@@ -10,6 +10,7 @@ import {
   getDocs,
   query,
   where,
+  deleteDoc,
 } from "@firebase/firestore"; // Import the 'collection' method from 'firebase/firestore'
 
 // Mengambil list semua barang yang ada di firestore
@@ -223,5 +224,18 @@ export async function editBarang(
     console.log('Barang updated successfully');
   } catch (error) {
     console.error('Error updating barang:', error);
+  }
+}
+
+export async function deleteBarang(BarangID: string): Promise<void> {
+  try {
+    // Membuat referensi dokumen barang berdasarkan BarangID
+    const barangDocRef = doc(fs, 'Barang', BarangID);
+
+    // Menghapus dokumen barang
+    await deleteDoc(barangDocRef);
+    console.log('Barang deleted successfully');
+  } catch (error) {
+    console.error('Error deleting barang:', error);
   }
 }

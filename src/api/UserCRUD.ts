@@ -1,22 +1,9 @@
-import { useState, useEffect } from "react";
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
 import { auth, fs } from '../constants/firebaseConfig'; // Import konfigurasi Firestore
 import { Pengguna } from "../type";
 import {
-    addDoc,
-    getDoc,
-    updateDoc,
-    getDocs,
-    query,
-    where,
-    doc,
+  runTransaction, writeBatch, doc, collection, query, where, getDocs, getDoc
   } from "@firebase/firestore"; // Import the 'collection' method from 'firebase/firestore'
-
-
-// change Password current user 
-
-// const [userEmail, setUserEmail] = useState('');
-// const [currentPassword, setCurrentPassword] = useState('');
 
 
 export async function readUser(): Promise<Pengguna | null> {
@@ -80,58 +67,61 @@ export async function gantiPassword (
 }
 
 export async function editPengguna(
-    Email: string,
-    NamaToko: string | null,
-    NamaPengguna: string| null,
-    TanggalLahir: Date| null,
-    JenisKelamin: string| null,
-    NomorTelepon: string| null,
-  ): Promise<void> {
-    if (!auth.currentUser) {
-      console.error('User not authenticated');
-      return;
-    }
-  
-    try {
-      // Membuat referensi dokumen pengguna berdasarkan email
-      const penggunaDocRef = doc(fs, 'Pengguna', Email);
-  
-      // Data pengguna yang akan diupdate tanpa mengubah foto
+  Email: string,
+  NamaToko: string | null,
+  NamaPengguna: string | null,
+  JenisKelamin: string | null,
+  NomorTelepon: string | null
+): Promise<void> {
+  if (!auth.currentUser) {
+    console.error('User not authenticated');
+    return;
+  }
+
+  try {
+    const penggunaDocRef = doc(fs, 'Pengguna', Email);
+
+    await runTransaction(fs, async (transaction) => {
+      const penggunaDoc = await transaction.get(penggunaDocRef);
+      if (!penggunaDoc.exists()) {
+        throw new Error('User document does not exist');
+      }
+
+      const penggunaData = penggunaDoc.data() as Pengguna;
       const updatedData: Partial<Pengguna> = {};
 
-        if (NamaPengguna !== undefined) updatedData.NamaPengguna = NamaPengguna;
-        if (TanggalLahir !== undefined) updatedData.TanggalLahir = TanggalLahir;
-        if (JenisKelamin !== undefined) updatedData.JenisKelamin = JenisKelamin;
-        if (NomorTelepon !== undefined) updatedData.NomorTelepon = NomorTelepon;
-        if (NamaToko !== undefined) updatedData.NamaToko = NamaToko;
-  
-      // Mengupdate dokumen pengguna dengan data yang baru
-      await updateDoc(penggunaDocRef, updatedData);
-      console.log('User information updated successfully');
-    } catch (error) {
-      console.error('Error updating user information:', error);
-    }
-  }
+      if (NamaPengguna !== null && NamaPengguna !== penggunaData.NamaPengguna) {
+        updatedData.NamaPengguna = NamaPengguna;
+      }
+      if (JenisKelamin !== null && JenisKelamin !== penggunaData.JenisKelamin) {
+        updatedData.JenisKelamin = JenisKelamin;
+      }
+      if (NomorTelepon !== null && NomorTelepon !== penggunaData.NomorTelepon) {
+        updatedData.NomorTelepon = NomorTelepon;
+      }
 
-  export async function editFotoPengguna(Email: string, fotoUrl: string): Promise<void> {
-    if (!auth.currentUser) {
-      console.error('User not authenticated');
-      return;
-    }
-  
-    try {
-      // Membuat referensi dokumen pengguna berdasarkan email
-      const penggunaDocRef = doc(fs, 'Pengguna', Email);
-  
-      // Data pengguna yang akan diupdate dengan URL foto baru
-      const updatedData: Partial<Pengguna> = {
-        Foto: fotoUrl
-      };
-  
-      // Mengupdate dokumen pengguna dengan foto yang baru
-      await updateDoc(penggunaDocRef, updatedData);
-      console.log('User photo updated successfully');
-    } catch (error) {
-      console.error('Error updating user photo:', error);
-    }
+      if (NamaToko !== null && NamaToko !== penggunaData.NamaToko) {
+        updatedData.NamaToko = NamaToko;
+
+        const barangQuery = query(collection(fs, 'Barang'), where('NamaToko', '==', penggunaData.NamaToko));
+        const barangDocs = await getDocs(barangQuery);
+
+        const batch = writeBatch(fs);
+        barangDocs.forEach((barangDoc) => {
+          batch.update(barangDoc.ref, { NamaToko: NamaToko });
+        });
+
+        await batch.commit();
+      }
+
+      if (Object.keys(updatedData).length > 0) {
+        transaction.update(penggunaDocRef, updatedData);
+        console.log('User information updated successfully');
+      } else {
+        console.log('No changes detected');
+      }
+    });
+  } catch (error) {
+    console.error('Error updating user information:', error);
   }
+}
