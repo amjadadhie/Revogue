@@ -6,6 +6,8 @@ import {
   Pressable,
   Alert,
   ScrollView,
+  Modal,
+  TextInput,
 } from "react-native";
 import Entypo from "@expo/vector-icons/Entypo";
 import { router } from "expo-router";
@@ -17,9 +19,62 @@ import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
 import ProductListItem from "../../../../components/clothesBoxStore";
 
+const ProductModal = ({
+  visible,
+  onClose,
+  userData,
+  onSave,
+}: {
+  visible: boolean;
+  onClose: () => void;
+  userData: any;
+  onSave: (toko: string) => void;
+}) => {
+  const [toko, setToko] = useState("");
+
+  useEffect(() => {
+    if (userData) {
+      setToko(userData.NamaToko || "");
+    }
+  }, [userData]);
+
+  const handleSave = () => {
+    onSave(toko);
+    onClose();
+  };
+
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <Pressable style={styles.closeButton} onPress={onClose}>
+            <Entypo name="cross" size={24} color="black" />
+          </Pressable>
+          <Text style={styles.modalTitle}>Add Your Product</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Store Name"
+            value={toko}
+            onChangeText={setToko}
+          />
+          <View style={styles.buttonContainer}>
+            <Button text="Save" onPress={handleSave} />
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
 export default function UserStore() {
   const [toko, setToko] = useState("");
   const [userData, setUserData] = useState<any>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -51,6 +106,15 @@ export default function UserStore() {
       Alert.alert("Error", "Failed to update user information.");
     }
   };
+  const handleAddProduct = async (toko: string) => {
+    if (!userData) {
+      console.error("User data is not loaded yet.");
+      return;
+    }
+
+    // Logic to add a product goes here
+  };
+    
   if (!userData) {
     // Return loading indicator or empty view while user data is being fetched
     return (
@@ -101,6 +165,13 @@ export default function UserStore() {
         <View style={styles.boxContainer}>
           <ProductListItem userStoreName={userData.NamaToko} />
         </View>
+       <Button text="Add Product" onPress={() => setIsModalVisible(true)} style={styles.addButton}/>
+        <ProductModal
+          visible={isModalVisible}
+          onClose={() => setIsModalVisible(false)}
+          userData={userData}
+          onSave={handleAddProduct}
+        />
       </ScrollView>
     );
   }
@@ -149,11 +220,63 @@ const styles = StyleSheet.create({
   },
   boxContainer: {
     marginTop: 8,
+    position: "relative",
   },
   loading: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  addButton: {
+    position: "relative",
+    marginHorizontal: "auto",
+    marginVertical: 40,
+  },
+  addButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    width: 300,
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    elevation: 10,
+    position: "relative",
+  },
+  closeButton: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    zIndex: 1,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 20,
+    marginTop: 20,
+    textAlign: "center",
+  },
+  input: {
+    height: 40,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    marginBottom: 12,
+    paddingHorizontal: 8,
+    borderRadius: 5,
+  },
+  buttonContainer: {
+    flexDirection: "column",
+    marginTop: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 20,
   },
 });
 
