@@ -99,7 +99,6 @@ export async function editPengguna(
       if (NomorTelepon !== null && NomorTelepon !== penggunaData.NomorTelepon) {
         updatedData.NomorTelepon = NomorTelepon;
       }
-
       if (NamaToko !== null && NamaToko !== penggunaData.NamaToko) {
         updatedData.NamaToko = NamaToko;
 

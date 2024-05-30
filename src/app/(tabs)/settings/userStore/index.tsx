@@ -39,9 +39,9 @@ export default function UserStore() {
       await editPengguna(
         userData.Email,
         toko,
-        userData.Nama,
-        userData.NomorTelepon,
-        userData.JenisKelamin
+        userData.NamaPengguna,
+        userData.JenisKelamin,
+        userData.NomorTelepon
       );
       Alert.alert("Success", "User information updated successfully.");
       router.push("/settings");
