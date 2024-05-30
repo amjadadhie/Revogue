@@ -268,5 +268,39 @@ export async function addTandai(BarangID: string) {
 }
 
 
+export async function deleteKeranjang(BarangID: string): Promise<void> {
+  if (!auth.currentUser) {
+      console.error('User not authenticated');
+      return;
+  }
+
+  const userEmail = auth.currentUser.email;
+  if (!userEmail) {
+      console.error('User email is not available');
+      return;
+  }
+
+  try {
+      // Membuat referensi koleksi 'DaftarKeranjang' di bawah dokumen pengguna yang sesuai dengan email
+      const keranjangCollectionRef = collection(fs, 'Pengguna', userEmail, 'DaftarKeranjang');
+
+      // Membuat query untuk mencari dokumen keranjang dengan BarangID yang sesuai
+      const q = query(keranjangCollectionRef, where('BarangID', '==', BarangID));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+          // Menghapus semua dokumen yang ditemukan dengan BarangID yang sesuai
+          querySnapshot.forEach(async (docSnap) => {
+              await deleteDoc(docSnap.ref);
+          });
+          console.log('Barang removed from keranjang successfully');
+      } else {
+          console.log('No such document with the given BarangID');
+      }
+  } catch (error) {
+      console.error('Error deleting keranjang:', error);
+  }
+}
+
 
 
