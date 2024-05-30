@@ -97,7 +97,7 @@ export default function SettingsPage() {
         title="Change Password"
       />
       <SettingsButton
-        href="/settings/userDetail"
+        href="/settings/addressBook"
         source={require("../../../../assets/icon/map-pin.png")}
         title="Address Book"
       />

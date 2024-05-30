@@ -69,17 +69,18 @@ export default function UserDetail() {
           onChange={(value) => setNomorHP(value)}
           placeholder={userData ? userData.NomorTelepon : "Phone Number"}
         />
-        <DateField label="Date Of Birth" onChange={setDate} value={date} />
-        <Text style={styles.label}>Gender</Text>
-        <RNPickerSelect
-          onValueChange={(value) => setJenisKelamin(value)}
-          items={[
-            { label: "Male", value: "Male" },
-            { label: "Female", value: "Female" },
-          ]}
-          placeholder={{ label: "Select Gender", value: " " }}
-          style={pickerSelectStyles}
-        />
+        <View style={styles.pickerContainer}>
+          <Text style={styles.label}>Gender</Text>
+          <RNPickerSelect
+            onValueChange={(value) => setJenisKelamin(value)}
+            items={[
+              { label: "Male", value: "Male" },
+              { label: "Female", value: "Female" },
+            ]}
+            placeholder={{ label: "Select Gender", value: " " }}
+            style={pickerSelectStyles}
+          />
+        </View>
       </View>
       <Button text="Save Change" style={styles.button} onPress={handleUpdate} />
     </View>
@@ -118,10 +119,14 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   label: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "black",
     marginBottom: 8,
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#000",
+  },
+  pickerContainer: {
+    marginBottom: 16,
+    paddingHorizontal: 8,
   },
   button: {
     marginTop: 48,
@@ -134,8 +139,8 @@ const pickerSelectStyles = StyleSheet.create({
     fontSize: 16,
     paddingVertical: 12,
     paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: "gray",
+    borderBottomWidth: 1,
+    borderColor: "black",
     borderRadius: 4,
     color: "black",
     paddingRight: 30, // to ensure the text is never behind the icon
@@ -144,9 +149,8 @@ const pickerSelectStyles = StyleSheet.create({
     fontSize: 16,
     paddingHorizontal: 10,
     paddingVertical: 8,
-    borderWidth: 0.5,
-    borderColor: "gray",
-    borderRadius: 8,
+    borderBottomWidth: 0.5,
+    borderColor: "black",
     color: "black",
     paddingRight: 30, // to ensure the text is never behind the icon
   },

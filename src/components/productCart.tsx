@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
   details: {
     flexDirection: "column",
     gap: 4,
+    width: 134,
   },
   productName: {
     fontSize: 16,
