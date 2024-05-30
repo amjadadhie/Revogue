@@ -36,7 +36,6 @@ export default function UserDetail() {
         userData.Email,
         userData.NamaToko,
         name,
-        date,
         jenisKelamin,
         nomorHP
       );

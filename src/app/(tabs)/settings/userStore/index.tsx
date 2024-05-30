@@ -40,9 +40,8 @@ export default function UserStore() {
         userData.Email,
         toko,
         userData.Nama,
-        userData.TanggalLahir,
-        userData.JenisKelamin,
-        userData.NomorHP
+        userData.NomorTelepon,
+        userData.JenisKelamin
       );
       Alert.alert("Success", "User information updated successfully.");
       router.push("/settings");
