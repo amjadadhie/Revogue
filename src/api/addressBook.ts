@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { fs, app, auth } from "../constants/firebaseConfig"; // Import konfigurasi Firestore
+import { fs, auth } from "../constants/firebaseConfig"; // Import konfigurasi Firestore
 import {
   collection,
   addDoc,
@@ -61,11 +60,6 @@ export async function readAddress() {
   }
 }
 
-// Contoh panggilan fungsi readAddress
-// readAddress();
-
-// buat fungsi addAddress (tambah alamat)
-
 export async function addAddress(
   NamaAlamat: string,
   NamaJalan: string,
@@ -107,11 +101,6 @@ export async function addAddress(
     console.error("Error adding address:", error);
   }
 }
-
-// Contoh panggilan fungsi addAddress
-// addAddress('Rumah', 'Jalan ABC', '123', '12345');
-
-// fungsi editAddress (edit alamat yang ingin diedit)
 
 export async function editAddress(
   NamaAlamat: string,
@@ -169,10 +158,6 @@ export async function editAddress(
   }
 }
 
-// Contoh panggilan fungsi editAddress untuk mengedit alamat dengan NamaAlamat 'Rumah'
-// editAddress('Rumah Lama', 'Rumah Baru', 'Jalan XYZ', 'Dago, Bandung', '67890');
-
-// delete Address
 export async function deleteAddress(NamaAlamat: string): Promise<void> {
   if (!auth.currentUser) {
     console.error("User not authenticated");

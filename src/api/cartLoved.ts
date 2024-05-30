@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, getDoc, addDoc, onSnapshot } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, addDoc } from 'firebase/firestore';
 import { auth, fs } from '../constants/firebaseConfig'; // Pastikan Anda mengimpor auth dan fs dari file konfigurasi Firebase
 import { Keranjang, Tandai } from '../type'; // Pastikan Anda mengimpor tipe Keranjang
 import {
@@ -7,7 +7,6 @@ import {
     where,
     deleteDoc,
   } from "@firebase/firestore"; // Import the 'collection' method from 'firebase/firestore'
-import { useState, useEffect } from "react";
 
 export async function readKeranjang(): Promise<Keranjang[]> {
     if (!auth.currentUser) {

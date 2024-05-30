@@ -8,10 +8,10 @@ import {
   Pressable,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { getAuth, createUserWithEmailAndPassword } from "@firebase/auth";
-import { getFirestore, doc, setDoc } from "@firebase/firestore";
+import { createUserWithEmailAndPassword } from "@firebase/auth";
+import { doc, setDoc } from "@firebase/firestore";
 import { auth, fs } from "../../constants/firebaseConfig"; // Pastikan import ini benar
-import { Link, Redirect, router } from "expo-router";
+import { Link, router } from "expo-router";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");

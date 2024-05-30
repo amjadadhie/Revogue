@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
 import { fs, auth, storage } from "../constants/firebaseConfig"; // Import konfigurasi Firestore
-import { collection, doc, onSnapshot } from "firebase/firestore";
+import { collection, doc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Barang } from "../type";
 import {

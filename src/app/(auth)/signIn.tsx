@@ -1,17 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { auth } from "../../constants/firebaseConfig"; // Import konfigurasi Firestore
 import { signInWithEmailAndPassword } from "@firebase/auth";
 import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
-  ScrollView,
   Alert,
   Pressable,
 } from "react-native";
-import { initializeApp } from "@firebase/app";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link, router } from "expo-router";
