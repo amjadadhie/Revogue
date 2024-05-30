@@ -2,7 +2,7 @@ import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 
 import { auth, fs } from '../constants/firebaseConfig'; // Import konfigurasi Firestore
 import { Pengguna } from "../type";
 import {
-  runTransaction, writeBatch, doc, collection, query, where, getDocs, getDoc
+  runTransaction, writeBatch, doc, collection, query, where, getDocs, getDoc, updateDoc
   } from "@firebase/firestore"; // Import the 'collection' method from 'firebase/firestore'
 
 
@@ -123,5 +123,28 @@ export async function editPengguna(
     });
   } catch (error) {
     console.error('Error updating user information:', error);
+  }
+}
+
+export async function editFotoPengguna(Email: string, fotoUrl: string): Promise<void> {
+  if (!auth.currentUser) {
+    console.error('User not authenticated');
+    return;
+  }
+
+  try {
+    // Membuat referensi dokumen pengguna berdasarkan email
+    const penggunaDocRef = doc(fs, 'Pengguna', Email);
+
+    // Data pengguna yang akan diupdate dengan URL foto baru
+    const updatedData: Partial<Pengguna> = {
+      Foto: fotoUrl
+    };
+
+    // Mengupdate dokumen pengguna dengan foto yang baru
+    await updateDoc(penggunaDocRef, updatedData);
+    console.log('User photo updated successfully');
+  } catch (error) {
+    console.error('Error updating user photo:', error);
   }
 }
