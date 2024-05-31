@@ -116,14 +116,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#FAFAFA",
     width: "48%", // Adjusting to slightly less than 50% to account for margin
     marginVertical: 10,
-    paddingHorizontal: 10,
     borderRadius: 10,
     position: "relative",
   },
   image: {
     aspectRatio: 1,
     width: "100%",
-    height: 180,
+    height: "auto",
     borderRadius: 10,
     borderColor: "#D4D4D4",
     borderWidth: 1,

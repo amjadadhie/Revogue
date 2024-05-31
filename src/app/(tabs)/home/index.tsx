@@ -93,5 +93,6 @@ const styles = StyleSheet.create({
   },
   boxContainer: {
     marginTop: 38,
+    paddingHorizontal: "auto",
   },
 });

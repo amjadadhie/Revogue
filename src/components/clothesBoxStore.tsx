@@ -47,7 +47,6 @@ const ProductListItem: React.FC<ProductListItemProps> = ({
     (barang) => barang.NamaToko === userData.NamaToko
   );
 
-
   return (
     <View style={styles.listContainer}>
       {filteredProducts.map((barang) => (
@@ -76,16 +75,16 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: "#FAFAFA",
-    width: "48%", // Adjusting to slightly less than 50% to account for margin
+    width: "50%", // Adjusting to slightly less than 50% to account for margin
     marginVertical: 10,
-    paddingHorizontal: 10,
     borderRadius: 10,
     position: "relative",
+    alignItems: "center",
   },
   image: {
     aspectRatio: 1,
-    width: "100%",
-    height: 180,
+    width: "90%",
+    height: "auto",
     borderRadius: 10,
     borderColor: "#D4D4D4",
     borderWidth: 1,

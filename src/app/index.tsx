@@ -1,10 +1,4 @@
-import {
-  Text,
-  View,
-  StyleSheet,
-  ImageBackground,
-  Image,
-} from "react-native";
+import { Text, View, StyleSheet, ImageBackground, Image } from "react-native";
 import React from "react";
 import { Link } from "expo-router";
 
@@ -47,6 +41,7 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     resizeMode: "cover", // or "stretch"
+    height: "auto",
   },
   container: {
     flex: 1,

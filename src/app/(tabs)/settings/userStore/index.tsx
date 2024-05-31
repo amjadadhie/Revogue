@@ -29,7 +29,12 @@ const ProductModal = ({
   visible: boolean;
   onClose: () => void;
   userData: any;
-  onSave: (product: { NamaBarang: string; Deskripsi: string; Harga: string; Stok: string }) => void;
+  onSave: (product: {
+    NamaBarang: string;
+    Deskripsi: string;
+    Harga: string;
+    Stok: string;
+  }) => void;
 }) => {
   const [namaBarang, setNamaBarang] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
@@ -46,7 +51,12 @@ const ProductModal = ({
   }, [userData]);
 
   const handleAdd = () => {
-    const product = { NamaBarang: namaBarang, Deskripsi: deskripsi, Harga: harga, Stok: stok };
+    const product = {
+      NamaBarang: namaBarang,
+      Deskripsi: deskripsi,
+      Harga: harga,
+      Stok: stok,
+    };
     onSave(product);
     onClose();
   };
@@ -64,7 +74,7 @@ const ProductModal = ({
             <Entypo name="cross" size={24} color="black" />
           </Pressable>
           <Text style={styles.modalTitle}>Add Your New Product</Text>
-          
+
           <TextInput
             style={styles.input}
             placeholder="Nama Barang"
@@ -101,7 +111,6 @@ const ProductModal = ({
   );
 };
 
-
 export default function UserStore() {
   const [toko, setToko] = useState("");
   const [userData, setUserData] = useState<any>(null);
@@ -137,9 +146,14 @@ export default function UserStore() {
       Alert.alert("Error", "Failed to update user information.");
     }
   };
-  const handleAddProduct = async (product: { NamaBarang: string; Deskripsi: string; Harga: string; Stok: string }) => {
+  const handleAddProduct = async (product: {
+    NamaBarang: string;
+    Deskripsi: string;
+    Harga: string;
+    Stok: string;
+  }) => {
     // Implementasi untuk menyimpan produk
-    console.log('Product saved:', product);
+    console.log("Product saved:", product);
     if (!userData) {
       Alert.alert("Error", "User data is not loaded yet.");
       return;
@@ -147,22 +161,21 @@ export default function UserStore() {
     // Implementasi untuk menyimpan produk
     try {
       // Panggil fungsi untuk menyimpan produk
-      // await addBarang(userData.Email, 
-      //       product.NamaBarang, 
-      //       product.Deskripsi, 
-      //       product.Harga, 
+      // await addBarang(userData.Email,
+      //       product.NamaBarang,
+      //       product.Deskripsi,
+      //       product.Harga,
       //       product.Stok,
       //       userData.NamaToko,
       //       userData.FotoToko,
 
-      
       console.log("Product saved successfully");
     } catch (error) {
       console.error("Error saving product:", error);
       Alert.alert("Error", "Failed to save product.");
     }
   };
-    
+
   if (!userData) {
     // Return loading indicator or empty view while user data is being fetched
     return (
@@ -213,7 +226,11 @@ export default function UserStore() {
         <View style={styles.boxContainer}>
           <ProductListItem userStoreName={userData.NamaToko} />
         </View>
-       <Button text="Add Product" onPress={() => setIsModalVisible(true)} style={styles.addButton}/>
+        <Button
+          text="Add Product"
+          onPress={() => setIsModalVisible(true)}
+          style={styles.addButton}
+        />
         <ProductModal
           visible={isModalVisible}
           onClose={() => setIsModalVisible(false)}
