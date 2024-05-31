@@ -4,7 +4,6 @@ import Entypo from "@expo/vector-icons/Entypo";
 import { router } from "expo-router";
 import Field from "@/src/components/field";
 import { readUser, editPengguna } from "@/src/api/UserCRUD";
-import DateField from "@/src/components/datePicker";
 import Button from "@/src/components/button";
 import RNPickerSelect from "react-native-picker-select";
 
