@@ -18,6 +18,7 @@ import Button from "@/src/components/button";
 import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
 import ProductListItem from "../../../../components/clothesBoxStore";
+import { addBarang } from "@/src/api/BarangCRUD";
 
 const ProductModal = ({
   visible,
@@ -28,18 +29,25 @@ const ProductModal = ({
   visible: boolean;
   onClose: () => void;
   userData: any;
-  onSave: (toko: string) => void;
+  onSave: (product: { NamaBarang: string; Deskripsi: string; Harga: string; Stok: string }) => void;
 }) => {
-  const [toko, setToko] = useState("");
+  const [namaBarang, setNamaBarang] = useState("");
+  const [deskripsi, setDeskripsi] = useState("");
+  const [harga, setHarga] = useState("");
+  const [stok, setStok] = useState("");
 
   useEffect(() => {
     if (userData) {
-      setToko(userData.NamaToko || "");
+      setNamaBarang(userData.NamaBarang || "");
+      setDeskripsi(userData.Deskripsi || "");
+      setHarga(userData.Harga || "");
+      setStok(userData.Stok || "");
     }
   }, [userData]);
 
-  const handleSave = () => {
-    onSave(toko);
+  const handleAdd = () => {
+    const product = { NamaBarang: namaBarang, Deskripsi: deskripsi, Harga: harga, Stok: stok };
+    onSave(product);
     onClose();
   };
 
@@ -55,21 +63,44 @@ const ProductModal = ({
           <Pressable style={styles.closeButton} onPress={onClose}>
             <Entypo name="cross" size={24} color="black" />
           </Pressable>
-          <Text style={styles.modalTitle}>Add Your Product</Text>
+          <Text style={styles.modalTitle}>Add Your New Product</Text>
+          
           <TextInput
             style={styles.input}
-            placeholder="Store Name"
-            value={toko}
-            onChangeText={setToko}
+            placeholder="Nama Barang"
+            value={namaBarang}
+            onChangeText={setNamaBarang}
           />
+          <TextInput
+            style={styles.input}
+            placeholder="Deskripsi"
+            value={deskripsi}
+            onChangeText={setDeskripsi}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Harga"
+            value={harga}
+            onChangeText={setHarga}
+            keyboardType="numeric"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Stok"
+            value={stok}
+            onChangeText={setStok}
+            keyboardType="numeric"
+          />
+
           <View style={styles.buttonContainer}>
-            <Button text="Save" onPress={handleSave} />
+            <Button text="Add" onPress={handleAdd} />
           </View>
         </View>
       </View>
     </Modal>
   );
 };
+
 
 export default function UserStore() {
   const [toko, setToko] = useState("");
@@ -106,13 +137,30 @@ export default function UserStore() {
       Alert.alert("Error", "Failed to update user information.");
     }
   };
-  const handleAddProduct = async (toko: string) => {
+  const handleAddProduct = async (product: { NamaBarang: string; Deskripsi: string; Harga: string; Stok: string }) => {
+    // Implementasi untuk menyimpan produk
+    console.log('Product saved:', product);
     if (!userData) {
-      console.error("User data is not loaded yet.");
+      Alert.alert("Error", "User data is not loaded yet.");
       return;
     }
+    // Implementasi untuk menyimpan produk
+    try {
+      // Panggil fungsi untuk menyimpan produk
+      // await addBarang(userData.Email, 
+      //       product.NamaBarang, 
+      //       product.Deskripsi, 
+      //       product.Harga, 
+      //       product.Stok,
+      //       userData.NamaToko,
+      //       userData.FotoToko,
 
-    // Logic to add a product goes here
+      
+      console.log("Product saved successfully");
+    } catch (error) {
+      console.error("Error saving product:", error);
+      Alert.alert("Error", "Failed to save product.");
+    }
   };
     
   if (!userData) {
