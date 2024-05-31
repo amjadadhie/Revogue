@@ -68,10 +68,10 @@ export async function gantiPassword (
 
 export async function editPengguna(
   Email: string,
-  NamaToko: string | null,
-  NamaPengguna: string | null,
-  JenisKelamin: string | null,
-  NomorTelepon: string | null
+  NamaToko: string | null | undefined,
+  NamaPengguna: string | null | undefined,
+  JenisKelamin: string | null | undefined,
+  NomorTelepon: string | null| undefined,
 ): Promise<void> {
   if (!auth.currentUser) {
     console.error('User not authenticated');
@@ -90,16 +90,16 @@ export async function editPengguna(
       const penggunaData = penggunaDoc.data() as Pengguna;
       const updatedData: Partial<Pengguna> = {};
 
-      if (NamaPengguna !== null && NamaPengguna !== penggunaData.NamaPengguna) {
+      if (NamaPengguna !== null && NamaPengguna !== penggunaData.NamaPengguna && NamaPengguna !== undefined) {
         updatedData.NamaPengguna = NamaPengguna;
       }
-      if (JenisKelamin !== null && JenisKelamin !== penggunaData.JenisKelamin) {
+      if (JenisKelamin !== null && JenisKelamin !== penggunaData.JenisKelamin && JenisKelamin !== undefined) {
         updatedData.JenisKelamin = JenisKelamin;
       }
-      if (NomorTelepon !== null && NomorTelepon !== penggunaData.NomorTelepon) {
+      if (NomorTelepon !== null && NomorTelepon !== penggunaData.NomorTelepon && NomorTelepon !== undefined) {
         updatedData.NomorTelepon = NomorTelepon;
       }
-      if (NamaToko !== null && NamaToko !== penggunaData.NamaToko) {
+      if (NamaToko !== null && NamaToko !== penggunaData.NamaToko && NamaToko !== undefined) {
         updatedData.NamaToko = NamaToko;
 
         const barangQuery = query(collection(fs, 'Barang'), where('NamaToko', '==', penggunaData.NamaToko));

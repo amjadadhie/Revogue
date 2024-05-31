@@ -20,10 +20,10 @@ export type Pesanan = {
 
 export type Pengguna = {
   Email: string;
-  NamaPengguna: string | null;
-  JenisKelamin: string | null;
-  NomorTelepon: string | null;
-  NamaToko: string | null;
+  NamaPengguna: string | null | undefined;
+  JenisKelamin: string | null | undefined;
+  NomorTelepon: string | null | undefined;
+  NamaToko: string | null | undefined;
   Foto: string | null;
 };
 
