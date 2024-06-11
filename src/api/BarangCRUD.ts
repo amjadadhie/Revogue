@@ -10,6 +10,8 @@ import {
   query,
   where,
   deleteDoc,
+  orderBy,
+  limit,
 } from "@firebase/firestore"; // Import the 'collection' method from 'firebase/firestore'
 
 // Mengambil list semua barang yang ada di firestore
@@ -136,32 +138,36 @@ export async function filterBarangByHarga(
 }
 
 export async function addBarang(
-  BarangID: string,
   NamaBarang: string,
   Kategori: string,
   Harga: number,
-  file: File, // Menggunakan file sebagai parameter untuk upload gambar
+  Foto: string, // Menggunakan string URL sebagai parameter untuk foto
   Deskripsi: string,
   Stok: number,
   NamaToko: string,
   EmailPengguna: string,
 ): Promise<void> {
   try {
-    // Membuat referensi koleksi 'Barang'
+    // Mendapatkan referensi ke koleksi 'Barang'
     const barangCollectionRef = collection(fs, 'Barang');
 
-    // Upload gambar ke Firebase Storage
-    const storageRef = ref(storage, `Barang/${BarangID}/${file.name}`);
-    await uploadBytes(storageRef, file);
-    const Foto = await getDownloadURL(storageRef);
+    // Mendapatkan BarangID terbaru dan menambahkannya dengan 1
+    const latestBarangQuery = query(barangCollectionRef, orderBy('BarangID', 'desc'), limit(1));
+    const latestBarangSnapshot = await getDocs(latestBarangQuery);
+
+    let newBarangID = 1; // Default value if there are no documents
+    if (!latestBarangSnapshot.empty) {
+      const latestBarang = latestBarangSnapshot.docs[0].data();
+      newBarangID = latestBarang.BarangID + 1;
+    }
 
     // Data barang yang akan ditambahkan
-    const newBarang: Barang = {
-      BarangID,
+    const newBarang = {
+      BarangID: newBarangID,
       NamaBarang,
       Kategori,
       Harga,
-      Foto, // URL gambar yang diunggah
+      Foto, // URL gambar
       Deskripsi,
       Stok,
       NamaToko,
@@ -178,11 +184,11 @@ export async function addBarang(
 }
 
 export async function editBarang(
-  BarangID: string,
+  BarangID: number,
   NamaBarang: string,
   Kategori: string,
   Harga: number,
-  file: File | null, // File gambar baru atau null jika tidak ada perubahan gambar
+  Foto: string | null, // URL string of the new image or null if no image change
   Deskripsi: string,
   Stok: number,
   NamaToko: string,
@@ -190,7 +196,7 @@ export async function editBarang(
 ): Promise<void> {
   try {
     // Membuat referensi dokumen barang berdasarkan BarangID
-    const barangDocRef = doc(fs, 'Barang', BarangID);
+    const barangDocRef = doc(fs, 'Barang', BarangID.toString());
 
     // Mengambil data barang saat ini
     const barangDocSnap = await getDoc(barangDocRef);
@@ -200,7 +206,7 @@ export async function editBarang(
     }
 
     // Data barang yang akan diupdate
-    let updatedData: Partial<Barang> = {
+    const updatedData: Partial<Barang> = {
       NamaBarang,
       Kategori,
       Harga,
@@ -210,12 +216,9 @@ export async function editBarang(
       EmailPengguna,
     };
 
-    // Upload gambar baru jika diberikan
-    if (file) {
-      const storageRef = ref(storage, `Barang/${BarangID}/${file.name}`);
-      await uploadBytes(storageRef, file);
-      const Foto = await getDownloadURL(storageRef);
-      updatedData = { ...updatedData, Foto }; // Menambahkan URL gambar baru ke data yang diupdate
+    // Tambahkan URL gambar baru ke data yang diupdate jika diberikan
+    if (Foto) {
+      updatedData.Foto = Foto; // Menambahkan URL gambar baru ke data yang diupdate
     }
 
     // Mengupdate dokumen barang dengan data yang baru
@@ -226,10 +229,10 @@ export async function editBarang(
   }
 }
 
-export async function deleteBarang(BarangID: string): Promise<void> {
+export async function deleteBarang(BarangID: number): Promise<void> {
   try {
-    // Membuat referensi dokumen barang berdasarkan BarangID
-    const barangDocRef = doc(fs, 'Barang', BarangID);
+    // Mengonversi BarangID menjadi string untuk referensi dokumen
+    const barangDocRef = doc(fs, 'Barang', BarangID.toString());
 
     // Menghapus dokumen barang
     await deleteDoc(barangDocRef);
