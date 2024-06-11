@@ -66,7 +66,7 @@ export async function updateStok(BarangID: number, Stok: number) {
 }
 
 export async function readBarangByID(
-  barangID: number | undefined
+  barangID: string | undefined
 ){
   if (!auth.currentUser) {
     console.error("User not authenticated");

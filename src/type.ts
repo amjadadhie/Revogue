@@ -35,11 +35,11 @@ export type Alamat = {
 };
 
 export type Keranjang = {
-  BarangID: number;
+  BarangID: string;
   Jumlah: number;
   SubTotal: number;
 };
 
 export type Tandai = {
-  BarangID: number;
+  BarangID: string;
 };
