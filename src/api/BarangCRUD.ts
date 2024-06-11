@@ -1,6 +1,6 @@
 import { fs, auth, storage } from "../constants/firebaseConfig"; // Import konfigurasi Firestore
 import { collection, doc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Barang } from "../type";
 import {
   addDoc,
@@ -65,9 +65,7 @@ export async function updateStok(BarangID: number, Stok: number) {
   }
 }
 
-export async function readBarangByID(
-  barangID: number | undefined
-){
+export async function readBarangByID(barangID: number | undefined) {
   if (!auth.currentUser) {
     console.error("User not authenticated");
     return null;
@@ -75,7 +73,10 @@ export async function readBarangByID(
 
   try {
     // Membuat query ke koleksi Barang berdasarkan BarangID
-    const q = query(collection(fs, "Barang"), where("BarangID", "==", barangID));
+    const q = query(
+      collection(fs, "Barang"),
+      where("BarangID", "==", barangID)
+    );
 
     // Mendapatkan dokumen barang dari query
     const querySnapshot = await getDocs(q);
@@ -89,7 +90,6 @@ export async function readBarangByID(
 
       return barangData;
     } else {
-      console.log("No such document!");
       return null;
     }
   } catch (error) {
@@ -145,14 +145,18 @@ export async function addBarang(
   Deskripsi: string,
   Stok: number,
   NamaToko: string,
-  EmailPengguna: string,
+  EmailPengguna: string
 ): Promise<void> {
   try {
     // Mendapatkan referensi ke koleksi 'Barang'
-    const barangCollectionRef = collection(fs, 'Barang');
+    const barangCollectionRef = collection(fs, "Barang");
 
     // Mendapatkan BarangID terbaru dan menambahkannya dengan 1
-    const latestBarangQuery = query(barangCollectionRef, orderBy('BarangID', 'desc'), limit(1));
+    const latestBarangQuery = query(
+      barangCollectionRef,
+      orderBy("BarangID", "desc"),
+      limit(1)
+    );
     const latestBarangSnapshot = await getDocs(latestBarangQuery);
 
     let newBarangID = 1; // Default value if there are no documents
@@ -177,9 +181,9 @@ export async function addBarang(
     // Menambahkan dokumen baru ke koleksi 'Barang' dengan data barang baru
     await addDoc(barangCollectionRef, newBarang);
 
-    console.log('Barang added successfully');
+    console.log("Barang added successfully");
   } catch (error) {
-    console.error('Error adding barang:', error);
+    console.error("Error adding barang:", error);
   }
 }
 
@@ -192,16 +196,16 @@ export async function editBarang(
   Deskripsi: string,
   Stok: number,
   NamaToko: string,
-  EmailPengguna: string,
+  EmailPengguna: string
 ): Promise<void> {
   try {
     // Membuat referensi dokumen barang berdasarkan BarangID
-    const barangDocRef = doc(fs, 'Barang', BarangID.toString());
+    const barangDocRef = doc(fs, "Barang", BarangID.toString());
 
     // Mengambil data barang saat ini
     const barangDocSnap = await getDoc(barangDocRef);
     if (!barangDocSnap.exists()) {
-      console.error('Barang tidak ditemukan');
+      console.error("Barang tidak ditemukan");
       return;
     }
 
@@ -223,21 +227,21 @@ export async function editBarang(
 
     // Mengupdate dokumen barang dengan data yang baru
     await updateDoc(barangDocRef, updatedData);
-    console.log('Barang updated successfully');
+    console.log("Barang updated successfully");
   } catch (error) {
-    console.error('Error updating barang:', error);
+    console.error("Error updating barang:", error);
   }
 }
 
 export async function deleteBarang(BarangID: number): Promise<void> {
   try {
     // Mengonversi BarangID menjadi string untuk referensi dokumen
-    const barangDocRef = doc(fs, 'Barang', BarangID.toString());
+    const barangDocRef = doc(fs, "Barang", BarangID.toString());
 
     // Menghapus dokumen barang
     await deleteDoc(barangDocRef);
-    console.log('Barang deleted successfully');
+    console.log("Barang deleted successfully");
   } catch (error) {
-    console.error('Error deleting barang:', error);
+    console.error("Error deleting barang:", error);
   }
 }

@@ -217,7 +217,7 @@ export async function addTandai(BarangID: number) {
     }
   }
 
-  export async function reduceKeranjang(BarangID: string, Harga: number) {
+  export async function reduceKeranjang(BarangID: number, Harga: number) {
     if (!auth.currentUser) {
         console.error('User not authenticated');
         return;
@@ -268,7 +268,7 @@ export async function addTandai(BarangID: number) {
 }
 
 
-export async function deleteKeranjang(BarangID: string): Promise<void> {
+export async function deleteKeranjang(BarangID: number): Promise<void> {
   if (!auth.currentUser) {
       console.error('User not authenticated');
       return;

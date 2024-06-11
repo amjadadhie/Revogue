@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,10 +11,38 @@ import { useLocalSearchParams } from "expo-router";
 import { Barang, Keranjang } from "@/src/type";
 import Entypo from "@expo/vector-icons/Entypo";
 import { router } from "expo-router";
+import { readUser } from "@/src/api/UserCRUD";
+import { readAddress } from "@/src/api/addressBook";
+import { Alamat } from "@/src/type";
+import AddressCard from "@/src/components/address";
+import { addPesanan } from "@/src/api/Order";
+import { deleteKeranjang } from "@/src/api/cartLoved";
 
 const CheckoutPage = () => {
   const { selectedItems, selectedKeranjangItems } = useLocalSearchParams();
   const [paymentType, setPaymentType] = useState("bank-transfer");
+  const [userData, setUserData] = useState<any>(null);
+  const [addresses, setAddresses] = useState<Alamat[]>([]);
+  const [selectedAddress, setSelectedAddress] = useState<Alamat | null>(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = await readUser();
+      setUserData(user);
+    };
+
+    fetchUserData();
+
+    const fetchAddresses = async () => {
+      const fetchedAddresses = await readAddress();
+      setAddresses(fetchedAddresses || []);
+      if (fetchedAddresses && fetchedAddresses.length > 0) {
+        setSelectedAddress(fetchedAddresses[0]); // Default to the first address
+      }
+    };
+
+    fetchAddresses();
+  }, []);
 
   // Parse the JSON strings back into objects
   const selectedItemsParsed: Barang[] = selectedItems
@@ -24,90 +52,58 @@ const CheckoutPage = () => {
     ? JSON.parse(selectedKeranjangItems as string)
     : [];
 
-  const handlePayment = async () => {
-    // Check if selectedKeranjangItemsParsed is defined and not empty
-    if (selectedKeranjangItemsParsed.length === 0) {
-      Alert.alert("Error", "No items selected for checkout.");
-      return;
-    }
-
-    // Calculate total amount
-    const deliveryFee = 12000;
-    const totalAmount = selectedKeranjangItemsParsed.reduce(
-      (total, item) => total + item.SubTotal,
-      deliveryFee
-    );
-
-    // Mock API call to the backend to create an order
-    const orderDetails = {
-      deliveryAddress: {
-        name: "User Name",
-        phone: "081312345678",
-        address: "Tubagus Ismail XVI Street",
-        city: "Dago, Coblong, Kota Bandung",
-        province: "Jawa Barat",
-        zipCode: "40134",
-      },
-      items: selectedItemsParsed.map((item) => ({
-        name: item.NamaBarang,
-        price: item.Harga,
-        quantity: selectedKeranjangItemsParsed.find(
-          (keranjangItem) => keranjangItem.BarangID === item.BarangID
-        )?.Jumlah,
-      })),
-      paymentType: paymentType,
-      deliveryFee: deliveryFee,
-      totalAmount: totalAmount,
-    };
-
-    try {
-      const response = await fetch("https://your-backend-api/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(orderDetails),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to create order");
+    const handlePayment = async () => {
+      if (selectedKeranjangItemsParsed.length === 0) {
+        Alert.alert("Error", "No items selected for checkout.");
+        return;
       }
-
-      const result = await response.json();
-      if (paymentType !== "cash-on-delivery") {
-        // Redirect to payment gateway or handle payment process here
-        await handlePaymentGateway(result.orderId, result.totalAmount);
-      } else {
+    
+      if (!selectedAddress) {
+        Alert.alert("Error", "Please select a delivery address.");
+        return;
+      }
+    
+      const deliveryFee = 12000;
+      const totalAmount = selectedKeranjangItemsParsed.reduce(
+        (total, item) => total + item.SubTotal,
+        deliveryFee
+      );
+    
+      try {
+        for (const item of selectedKeranjangItemsParsed) {
+          const barang = selectedItemsParsed.find(
+            (barangItem) => barangItem.BarangID === item.BarangID
+          );
+    
+          if (barang) {
+            await addPesanan(
+              barang.NamaBarang,
+              barang.NamaToko,
+              item.SubTotal,
+              item.Jumlah,
+              "Pending"
+            );
+    
+            // Call deleteKeranjang function to remove the item from the cart
+            await deleteKeranjang(item.BarangID);
+          }
+        }
+    
         Alert.alert(
           "Order placed successfully",
           "Your order has been placed successfully!"
         );
+    
+        router.push("/cart");
+      } catch (error) {
+        if (error instanceof Error) {
+          Alert.alert("Error", error.message);
+        } else {
+          Alert.alert("Error", "An unexpected error occurred");
+        }
       }
-    } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert("Error", error.message);
-      } else {
-        Alert.alert("Error", "An unexpected error occurred");
-      }
-    }
-  };
-
-  const handlePaymentGateway = async (orderId: string, amount: number) => {
-    // Mock implementation of payment gateway integration
-    try {
-      // Redirect to payment gateway or open payment modal here
-      Alert.alert(
-        "Payment Successful",
-        `Order ${orderId} has been paid successfully!`
-      );
-    } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert("Payment Failed", error.message);
-      } else {
-        Alert.alert("Payment Failed", "An unexpected error occurred");
-      }
-    }
-  };
+    };
+    
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -121,11 +117,22 @@ const CheckoutPage = () => {
         <Text style={styles.title}>Checkout</Text>
       </View>
 
-      <View style={styles.section}>
+      <View style={styles.section1}>
         <Text style={styles.sectionHeader}>Delivery Address</Text>
-        <Text>User Name | 081312345678</Text>
-        <Text>Tubagus Ismail XVI Street</Text>
-        <Text>Dago, Coblong, Kota Bandung, Jawa Barat, 40134</Text>
+        <View>
+          {addresses.map((address, index) => (
+            <Pressable key={index} onPress={() => setSelectedAddress(address)}>
+              <AddressCard
+                addressTitle={address.NamaAlamat}
+                street={address.NamaJalan}
+                detail={address.DetailAlamat}
+                postalCode={address.KodePos}
+                isSelected={selectedAddress?.NamaAlamat === address.NamaAlamat}
+                isEdit={false}
+              />
+            </Pressable>
+          ))}
+        </View>
       </View>
 
       <View style={styles.section}>
@@ -183,7 +190,6 @@ const CheckoutPage = () => {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionHeader}>Delivery Options</Text>
         <Text>Standard Delivery Rp12.000</Text>
         <Text style={styles.deliveryInfo}>
           Delivered on or before Friday 3 May 2024
@@ -253,13 +259,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 12,
   },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
   section: {
     marginVertical: 20,
+  },
+  section1: {
+    marginTop: 20,
   },
   sectionHeader: {
     fontSize: 18,
