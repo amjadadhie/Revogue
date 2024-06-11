@@ -87,7 +87,7 @@ export async function readTandai(): Promise<Tandai[] | void> {
     }
 }
 
-export async function addKeranjang(BarangID: string, Harga: number) {
+export async function addKeranjang(BarangID: number, Harga: number) {
     if (!auth.currentUser) {
         console.error('User not authenticated');
         return;
@@ -138,7 +138,7 @@ export async function addKeranjang(BarangID: string, Harga: number) {
     }
 }
 
-export async function addTandai(BarangID: string) {
+export async function addTandai(BarangID: number) {
     if (!auth.currentUser) {
       console.error('User not authenticated');
       return;
@@ -168,12 +168,12 @@ export async function addTandai(BarangID: string) {
   }
 
   export async function editKeranjang(
-    BarangID: string,
+    BarangID: number,
     Jumlah: number
   ): Promise<void> {
     try {
       // Membuat referensi dokumen keranjang berdasarkan BarangID
-      const keranjangDocRef = doc(fs, 'Keranjang', BarangID);
+      const keranjangDocRef = doc(fs, 'Keranjang', BarangID.toString());
   
       // Mengupdate dokumen keranjang dengan Jumlah yang baru
       await updateDoc(keranjangDocRef, { Jumlah });
@@ -183,7 +183,7 @@ export async function addTandai(BarangID: string) {
     }
   }
 
-  export async function deleteTandai(BarangID: string) {
+  export async function deleteTandai(BarangID: number) {
     if (!auth.currentUser) {
       console.error('User not authenticated');
       return;
@@ -217,7 +217,7 @@ export async function addTandai(BarangID: string) {
     }
   }
 
-  export async function reduceKeranjang(BarangID: string, Harga: number) {
+  export async function reduceKeranjang(BarangID: number, Harga: number) {
     if (!auth.currentUser) {
         console.error('User not authenticated');
         return;
@@ -268,7 +268,7 @@ export async function addTandai(BarangID: string) {
 }
 
 
-export async function deleteKeranjang(BarangID: string): Promise<void> {
+export async function deleteKeranjang(BarangID: number): Promise<void> {
   if (!auth.currentUser) {
       console.error('User not authenticated');
       return;
