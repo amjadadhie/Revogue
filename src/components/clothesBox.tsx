@@ -40,7 +40,7 @@ const ProductListItem: React.FC<ProductListItemProps> = ({
     fetchData();
   }, []);
 
-  const handleLike = async (id: string) => {
+  const handleLike = async (id: number) => {
     try {
       if (likedItems[id]) {
         await deleteTandai(id);
