@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
 import { Barang, Keranjang } from "@/src/type";
 import { readKeranjang } from "@/src/api/cartLoved";
@@ -16,30 +16,30 @@ export default function Cart() {
   );
   const navigation = useNavigation();
 
-  const fetchData = useCallback(async () => {
-    try {
-      const dataKeranjang = await readKeranjang();
-      if (dataKeranjang && dataKeranjang.length > 0) {
-        setKeranjang(dataKeranjang);
-
-        const productPromises = dataKeranjang.map(async (item) => {
-          const product = await readBarangByID(item.BarangID);
-          return product;
-        });
-
-        const productData = await Promise.all(productPromises);
-        setProducts(
-          productData.filter((product) => product !== null) as Barang[]
-        );
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } 
-  }, []);
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const dataKeranjang = await readKeranjang();
+        if (dataKeranjang && dataKeranjang.length > 0) {
+          setKeranjang(dataKeranjang);
+
+          const productPromises = dataKeranjang.map(async (item) => {
+            const product = await readBarangByID(item.BarangID);
+            return product;
+          });
+
+          const productData = await Promise.all(productPromises);
+          setProducts(
+            productData.filter((product) => product !== null) as Barang[]
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
     fetchData();
-  }, [fetchData]);
+  }, []);
 
   const handleProductSelect = (productID: number) => {
     setSelectedProducts((prevSelected) => {
