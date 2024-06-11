@@ -2,7 +2,7 @@ export type Barang = {
   BarangID: number;
   NamaBarang: string;
   Kategori: string;
-  Harga: number |  undefined;
+  Harga: number;
   Foto: string;
   Deskripsi: string;
   Stok: number;

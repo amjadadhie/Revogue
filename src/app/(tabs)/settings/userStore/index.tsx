@@ -47,7 +47,7 @@ const ProductModal = ({
   const [harga, setHarga] = useState<number>();
   const [stok, setStok] = useState<number>();
   const [kategori, setKategori] = useState("");
-  const [image, setImage] = useState<string>("");
+  const [image, setImage] = useState("");
 
   useEffect(() => {
     if (userData) {
