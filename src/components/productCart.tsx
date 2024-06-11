@@ -22,15 +22,18 @@ export default function ProductCart({
 
   const incrementQuantity = async () => {
     setQuantity(quantity + 1);
-    await addKeranjang(product.BarangID, product.Harga);
+    await addKeranjang(keranjang.BarangID, keranjang.SubTotal);
   };
 
   const decrementQuantity = async () => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
-      await reduceKeranjang(product.BarangID, product.Harga);
+      await reduceKeranjang(keranjang.BarangID, keranjang.SubTotal);
     }
   };
+
+  // Calculate price based on quantity
+  const price = product.Harga * quantity;
 
   return (
     <View style={styles.productContainer}>

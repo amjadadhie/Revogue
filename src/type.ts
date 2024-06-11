@@ -11,6 +11,7 @@ export type Barang = {
 };
 
 export type Pesanan = {
+    BarangID: number;
     NamaBarang: string;
     NamaToko: string;
     TotalHarga: number;

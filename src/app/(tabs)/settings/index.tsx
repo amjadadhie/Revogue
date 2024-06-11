@@ -102,7 +102,7 @@ export default function SettingsPage() {
         title="Address Book"
       />
       <SettingsButton
-        href="/settings/userDetail"
+        href="/settings/myOrder"
         source={require("../../../../assets/icon/Bag.png")}
         title="My Orders"
       />

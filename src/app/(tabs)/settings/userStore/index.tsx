@@ -22,138 +22,112 @@ import ProductListItem from "../../../../components/clothesBoxStore";
 import { addBarang } from "@/src/api/BarangCRUD";
 import * as ImagePicker from "expo-image-picker";
 
-const ProductModal = ({
-  visible,
-  onClose,
-  userData,
-  onSave,
-}: {
-  visible: boolean;
-  onClose: () => void;
-  userData: any;
-  onSave: (product: {
-    NamaBarang: string;
-    Kategori: string;
-    Harga: number;
-    Foto: string;
-    Deskripsi: string;
-    Stok: number;
-    NamaToko: string;
-    EmailPengguna: string;
-  }) => void;
-}) => {
-  const [namaBarang, setNamaBarang] = useState("");
-  const [deskripsi, setDeskripsi] = useState("");
-  const [harga, setHarga] = useState<number>();
-  const [stok, setStok] = useState<number>();
-  const [kategori, setKategori] = useState("");
-  const [image, setImage] = useState("");
+// const ProductModal = ({
+//   visible,
+//   onClose,
+//   userData,
+//   onSave,
+// }: {
+//   visible: boolean;
+//   onClose: () => void;
+//   userData: any;
+//   onSave: () => void;
+// }) => {
+//   const [namaBarang, setNamaBarang] = useState("");
+//   const [deskripsi, setDeskripsi] = useState("");
+//   const [harga, setHarga] = useState<number>(0);
+//   const [stok, setStok] = useState<number>(0);
+//   const [kategori, setKategori] = useState("");
+//   const [image, setImage] = useState("");
 
-  useEffect(() => {
-    if (userData) {
-      setNamaBarang(userData.NamaBarang || "");
-      setDeskripsi(userData.Deskripsi || "");
-      setHarga(userData.Harga || 0);
-      setStok(userData.Stok || 0);
-      setKategori(userData.Kategori || "");
-    }
-  }, [userData]);
+//   const pickImage = async () => {
+//     let result = await ImagePicker.launchImageLibraryAsync({
+//       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+//       allowsEditing: true,
+//       aspect: [1, 1],
+//       quality: 1,
+//     });
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
+//     if (!result.canceled && result.assets && result.assets.length > 0) {
+//       // Update profile image state
+//       setImage(result.assets[0].uri);
+//     }
+//   };
 
-    if (!result.canceled && result.assets && result.assets.length > 0) {
-      // Update profile image state
-      setImage(result.assets[0].uri);
-    }
-  };
+//   return (
+//     <Modal
+//       animationType="none"
+//       transparent={true}
+//       visible={visible}
+//       onRequestClose={onClose}
+//     >
+//       <View style={styles.modalContainer}>
+//         <View style={styles.modalContent}>
+//           <Pressable style={styles.closeButton} onPress={onClose}>
+//             <Entypo name="cross" size={24} color="black" />
+//           </Pressable>
+//           <Text style={styles.modalTitle}>Add Your New Product</Text>
+//           <Pressable onPress={pickImage} style={styles.imageContainer}>
+//             {image ? (
+//               <Image source={{ uri: image }} style={styles.image} />
+//             ) : (
+//               <Text style={styles.imageText}>Input your image</Text>
+//             )}
+//           </Pressable>
+//           <TextInput
+//             style={styles.input}
+//             placeholder="Nama Barang"
+//             value={namaBarang}
+//             onChangeText={setNamaBarang}
+//           />
+//           <TextInput
+//             style={styles.input}
+//             placeholder="Deskripsi"
+//             value={deskripsi}
+//             onChangeText={setDeskripsi}
+//           />
+//           <TextInput
+//             style={styles.input}
+//             placeholder="Harga"
+//             value={harga}
+//             onChangeText={setHarga}
+//           />
+//           <TextInput
+//             style={styles.input}
+//             placeholder="Stok"
+//             value={stok}
+//             onChangeText={setStok}
+//           />
+//           <TextInput
+//             style={styles.input}
+//             placeholder="Kategori"
+//             value={kategori}
+//             onChangeText={setKategori}
+//           />
 
-  const handleAdd = () => {
-    const product = {
-      NamaBarang: namaBarang,
-      Deskripsi: deskripsi,
-      Harga: harga,
-      Stok: stok,
-      Kategori: kategori,
-      Foto: image,
-      NamaToko: userData.NamaToko,
-      EmailPengguna: userData.Email,
-    };
-    onSave(product);
-    onClose();
-  };
-
-  return (
-    <Modal
-      animationType="none"
-      transparent={true}
-      visible={visible}
-      onRequestClose={onClose}
-    >
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-          <Pressable style={styles.closeButton} onPress={onClose}>
-            <Entypo name="cross" size={24} color="black" />
-          </Pressable>
-          <Text style={styles.modalTitle}>Add Your New Product</Text>
-          <Pressable onPress={pickImage} style={styles.imageContainer}>
-            {image ? (
-              <Image source={{ uri: image }} style={styles.image} />
-            ) : (
-              <Text style={styles.imageText}>Input your image</Text>
-            )}
-          </Pressable>
-          <TextInput
-            style={styles.input}
-            placeholder="Nama Barang"
-            value={namaBarang}
-            onChangeText={setNamaBarang}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Deskripsi"
-            value={deskripsi}
-            onChangeText={setDeskripsi}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Harga"
-            value={harga}
-            onChangeText={setHarga}
-            keyboardType="numeric"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Stok"
-            value={stok}
-            onChangeText={setStok}
-            keyboardType="numeric"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Kategori"
-            value={kategori}
-            onChangeText={setKategori}
-          />
-
-          <View style={styles.buttonContainer}>
-            <Button text="Add" onPress={handleAdd} />
-          </View>
-        </View>
-      </View>
-    </Modal>
-  );
-};
+//           <View style={styles.buttonContainer}>
+//             <Button text="Add" onPress={onSave} />
+//           </View>
+//         </View>
+//       </View>
+//     </Modal>
+//   );
+// };
 
 export default function UserStore() {
   const [toko, setToko] = useState("");
   const [userData, setUserData] = useState<any>(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisible, setModalVisible] = useState<boolean>(false);
+  const [namaBarang, setNamaBarang] = useState("");
+  const [deskripsi, setDeskripsi] = useState("");
+  const [harga, setHarga] = useState(0);
+  const [stok, setStok] = useState(0);
+  const [kategori, setKategori] = useState("");
+  const [image, setImage] = useState("");
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -186,41 +160,47 @@ export default function UserStore() {
     }
   };
 
-  const handleAddProduct = async (product: {
-    NamaBarang: string;
-    Deskripsi: string;
-    Harga: number;
-    Stok: number;
-    Kategori: string;
-    Image: string;
-    NamaToko: string;
-    EmailPengguna: string;
-  }) => {
-    console.log("Product saved:", product);
-  
+  const handleAddProduct = async () => {
     if (!userData) {
       Alert.alert("Error", "User data is not loaded yet.");
       return;
     }
-  
+
     try {
       // Call the addBarang function with the product details
       await addBarang(
-        product.NamaBarang,
-        product.Kategori,
-        product.Harga,
-        product.Image, // Assuming this is the URL of the image
-        product.Deskripsi,
-        product.Stok,
+        namaBarang,
+        kategori,
+        harga,
+        image, // Assuming this is the URL of the image
+        deskripsi,
+        stok,
         userData.NamaToko,
         userData.Email
       );
-  
+
       console.log("Product saved successfully");
       Alert.alert("Success", "Product added successfully.");
+
+      setModalVisible(false);
+      router.push("/settings/userStore");
     } catch (error) {
       console.error("Error saving product:", error);
       Alert.alert("Error", "Failed to save product.");
+    }
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      // Update profile image state
+      setImage(result.assets[0].uri);
     }
   };
 
@@ -261,31 +241,80 @@ export default function UserStore() {
     );
   } else {
     return (
-      <ScrollView style={styles.page}>
-        <View style={styles.container1}>
-          <Pressable
-            style={styles.chevronContainer}
-            onPress={() => router.back()}
-          >
-            <Entypo name="chevron-left" size={24} color="black" />
-          </Pressable>
-          <Text style={styles.title}>Your Products</Text>
-        </View>
-        <View style={styles.boxContainer}>
-          <ProductListItem userStoreName={userData.NamaToko} />
-        </View>
-        <Button
-          text="Add Product"
-          onPress={() => setIsModalVisible(true)}
-          style={styles.addButton}
-        />
-        <ProductModal
-          visible={isModalVisible}
-          onClose={() => setIsModalVisible(false)}
-          userData={userData}
-          onSave={handleAddProduct}
-        />
-      </ScrollView>
+      <>
+        <Modal animationType="none" transparent={true} visible={isModalVisible}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Pressable style={styles.closeButton} onPress={toggleModal}>
+                <Entypo name="cross" size={24} color="black" />
+              </Pressable>
+              <Text style={styles.modalTitle}>Add Your New Product</Text>
+              <Pressable onPress={pickImage} style={styles.imageContainer}>
+                {image ? (
+                  <Image source={{ uri: image }} style={styles.image} />
+                ) : (
+                  <Text style={styles.imageText}>Input your image</Text>
+                )}
+              </Pressable>
+              <TextInput
+                style={styles.input}
+                placeholder="Nama Barang"
+                value={namaBarang}
+                onChangeText={setNamaBarang}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Deskripsi"
+                value={deskripsi}
+                onChangeText={setDeskripsi}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Harga"
+                value={harga.toString()}
+                onChangeText={(text) => setHarga(parseInt(text, 10))}
+                inputMode="numeric"
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Stok"
+                value={stok.toString()}
+                onChangeText={(text) => setStok(parseInt(text, 10))}
+                inputMode="numeric"
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Kategori"
+                value={kategori}
+                onChangeText={setKategori}
+              />
+
+              <View style={styles.buttonContainer}>
+                <Button text="Add" onPress={handleAddProduct} />
+              </View>
+            </View>
+          </View>
+        </Modal>
+        <ScrollView style={styles.page}>
+          <View style={styles.container1}>
+            <Pressable
+              style={styles.chevronContainer}
+              onPress={() => router.back()}
+            >
+              <Entypo name="chevron-left" size={24} color="black" />
+            </Pressable>
+            <Text style={styles.title}>Your Products</Text>
+          </View>
+          <View style={styles.boxContainer}>
+            <ProductListItem userStoreName={userData.NamaToko} />
+          </View>
+          <Button
+            text="Add Product"
+            onPress={toggleModal}
+            style={styles.addButton}
+          />
+        </ScrollView>
+      </>
     );
   }
 }

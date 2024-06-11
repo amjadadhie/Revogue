@@ -45,6 +45,7 @@ const CheckoutPage = () => {
   }, []);
 
   // Parse the JSON strings back into objects
+  // Parse the JSON strings back into objects
   const selectedItemsParsed: Barang[] = selectedItems
     ? JSON.parse(selectedItems as string)
     : [];
@@ -52,58 +53,58 @@ const CheckoutPage = () => {
     ? JSON.parse(selectedKeranjangItems as string)
     : [];
 
-    const handlePayment = async () => {
-      if (selectedKeranjangItemsParsed.length === 0) {
-        Alert.alert("Error", "No items selected for checkout.");
-        return;
-      }
-    
-      if (!selectedAddress) {
-        Alert.alert("Error", "Please select a delivery address.");
-        return;
-      }
-    
-      const deliveryFee = 12000;
-      const totalAmount = selectedKeranjangItemsParsed.reduce(
-        (total, item) => total + item.SubTotal,
-        deliveryFee
-      );
-    
-      try {
-        for (const item of selectedKeranjangItemsParsed) {
-          const barang = selectedItemsParsed.find(
-            (barangItem) => barangItem.BarangID === item.BarangID
-          );
-    
-          if (barang) {
-            await addPesanan(
-              barang.NamaBarang,
-              barang.NamaToko,
-              item.SubTotal,
-              item.Jumlah,
-              "Pending"
-            );
-    
-            // Call deleteKeranjang function to remove the item from the cart
-            await deleteKeranjang(item.BarangID);
-          }
-        }
-    
-        Alert.alert(
-          "Order placed successfully",
-          "Your order has been placed successfully!"
+  const handlePayment = async () => {
+    if (selectedKeranjangItemsParsed.length === 0) {
+      Alert.alert("Error", "No items selected for checkout.");
+      return;
+    }
+
+    if (!selectedAddress) {
+      Alert.alert("Error", "Please select a delivery address.");
+      return;
+    }
+
+    const deliveryFee = 12000;
+    const totalAmount = selectedKeranjangItemsParsed.reduce(
+      (total, item) => total + item.SubTotal,
+      deliveryFee
+    );
+
+    try {
+      for (const item of selectedKeranjangItemsParsed) {
+        const barang = selectedItemsParsed.find(
+          (barangItem) => barangItem.BarangID === item.BarangID
         );
-    
-        router.push("/cart");
-      } catch (error) {
-        if (error instanceof Error) {
-          Alert.alert("Error", error.message);
-        } else {
-          Alert.alert("Error", "An unexpected error occurred");
+
+        if (barang) {
+          await addPesanan(
+            item.BarangID, // Pass BarangID here
+            barang.NamaBarang,
+            barang.NamaToko,
+            item.SubTotal,
+            item.Jumlah,
+            "Pending"
+          );
+
+          // Call deleteKeranjang function to remove the item from the cart
+          await deleteKeranjang(item.BarangID);
         }
       }
-    };
-    
+
+      Alert.alert(
+        "Order placed successfully",
+        "Your order has been placed successfully!"
+      );
+
+      router.push("/cart");
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert("Error", error.message);
+      } else {
+        Alert.alert("Error", "An unexpected error occurred");
+      }
+    }
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -146,7 +147,11 @@ const CheckoutPage = () => {
                   (keranjangItem) => keranjangItem.BarangID === item.BarangID
                 )?.Jumlah
               }`}</Text>
-              <Text>{`Price: Rp${item.Harga.toLocaleString()}`}</Text>
+              <Text>{`Price: Rp${
+                selectedKeranjangItemsParsed.find(
+                  (keranjangItem) => keranjangItem.BarangID === item.BarangID
+                )?.SubTotal
+              }`}</Text>
             </View>
           ))}
         </View>
