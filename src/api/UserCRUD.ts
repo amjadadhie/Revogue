@@ -37,7 +37,7 @@ export async function readUser(): Promise<Pengguna | null> {
     }
 }
 
-export async function gantiPassword (
+export async function gantiPassword(
   currentPassword: string,
   newPassword: string,
   confirmNewPassword: string,
