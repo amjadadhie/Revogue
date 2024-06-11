@@ -7,6 +7,8 @@ interface AddressCardProps {
   detail: string;
   postalCode: string;
   onEditPress?: () => void;
+  isSelected?: boolean;
+  isEdit?: boolean;
 }
 
 const AddressCard: React.FC<AddressCardProps> = ({
@@ -15,21 +17,25 @@ const AddressCard: React.FC<AddressCardProps> = ({
   detail,
   postalCode,
   onEditPress,
+  isSelected = false,
+  isEdit = true,
 }) => {
   return (
-    <View style={styles.cardContainer}>
+    <View style={[styles.cardContainer, isSelected && styles.selected]}>
       <View style={styles.cardHeader}>
         <Image
           source={require("../../assets/icon/map-pin.png")}
           style={styles.icon}
         />
         <Text style={styles.addressTitle}>{addressTitle}</Text>
-        <Pressable onPress={onEditPress} style={styles.editButton}>
-          <Image
-            source={require("../../assets/icon/edit.png")}
-            style={styles.editIcon}
-          />
-        </Pressable>
+        {isEdit && (
+          <Pressable onPress={onEditPress} style={styles.editButton}>
+            <Image
+              source={require("../../assets/icon/edit.png")}
+              style={styles.editIcon}
+            />
+          </Pressable>
+        )}
       </View>
       <Text style={styles.addressDetail}>{street}</Text>
       <Text style={styles.addressDetail}>
@@ -45,6 +51,10 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 8,
     elevation: 3,
+  },
+  selected: {
+    borderWidth: 2,
+    borderColor: "#000",
   },
   cardHeader: {
     flexDirection: "row",
