@@ -51,13 +51,11 @@ const ProductListItem: React.FC<ProductListItemProps> = ({
     <View style={styles.listContainer}>
       {filteredProducts.map((barang) => (
         <View style={styles.container} key={barang.BarangID}>
-          <Link href={`/${segments[0]}/home/${barang.BarangID}`} asChild>
-            <Pressable>
-              <Image source={{ uri: barang.Foto }} style={styles.image} />
-              <Text style={styles.title}>{barang.NamaBarang}</Text>
-              <Text style={styles.price}>Rp{barang.Harga}</Text>
-            </Pressable>
-          </Link>
+          <Pressable>
+            <Image source={{ uri: barang.Foto }} style={styles.image} />
+            <Text style={styles.title}>{barang.NamaBarang}</Text>
+            <Text style={styles.price}>Rp{barang.Harga}</Text>
+          </Pressable>
         </View>
       ))}
     </View>
@@ -72,22 +70,32 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-between",
     marginTop: 10,
+    marginHorizontal: 18,
   },
   container: {
     backgroundColor: "#FAFAFA",
-    width: "50%", // Adjusting to slightly less than 50% to account for margin
+    width: "45%", // Adjusting to slightly less than 50% to account for margin
     marginVertical: 10,
     borderRadius: 10,
     position: "relative",
-    alignItems: "center",
   },
   image: {
     aspectRatio: 1,
-    width: "90%",
+    width: "100%",
     height: "auto",
     borderRadius: 10,
     borderColor: "#D4D4D4",
     borderWidth: 1,
+  },
+  likeIconContainer: {
+    position: "absolute",
+    top: 8,
+    right: 18,
+    zIndex: 1,
+  },
+  heartIcon: {
+    height: 22,
+    width: 22,
   },
   title: {
     fontSize: 14,

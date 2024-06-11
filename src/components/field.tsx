@@ -4,15 +4,17 @@ import Entypo from "@expo/vector-icons/Entypo";
 import Feather from "@expo/vector-icons/Feather";
 
 type FieldProps = {
-  label: string;
+  label?: string;
   placeholder: string;
   onChange: (text: string) => void;
+  value?: string;
   isPassword?: boolean;
 };
 
 const Field: React.FC<FieldProps> = ({
   label,
   placeholder,
+  value,
   onChange,
   isPassword = false,
 }) => {
@@ -31,6 +33,7 @@ const Field: React.FC<FieldProps> = ({
           onChangeText={onChange}
           placeholder={placeholder}
           secureTextEntry={secureText}
+          value={value}
         />
         {isPassword && (
           <Pressable onPress={toggleSecureText} style={styles.icon}>

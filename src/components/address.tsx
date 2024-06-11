@@ -6,7 +6,7 @@ interface AddressCardProps {
   street: string;
   detail: string;
   postalCode: string;
-  onEditPress: () => void;
+  onEditPress?: () => void;
 }
 
 const AddressCard: React.FC<AddressCardProps> = ({

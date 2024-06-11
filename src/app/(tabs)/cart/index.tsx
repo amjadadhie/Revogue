@@ -11,7 +11,7 @@ import { router } from "expo-router";
 export default function Cart() {
   const [keranjang, setKeranjang] = useState<Keranjang[]>([]);
   const [products, setProducts] = useState<Barang[]>([]);
-  const [selectedProducts, setSelectedProducts] = useState<Set<string>>(
+  const [selectedProducts, setSelectedProducts] = useState<Set<number>>(
     new Set()
   );
   const navigation = useNavigation();
@@ -41,7 +41,7 @@ export default function Cart() {
     fetchData();
   }, []);
 
-  const handleProductSelect = (productID: string) => {
+  const handleProductSelect = (productID: number) => {
     setSelectedProducts((prevSelected) => {
       const newSelected = new Set(prevSelected);
       if (newSelected.has(productID)) {

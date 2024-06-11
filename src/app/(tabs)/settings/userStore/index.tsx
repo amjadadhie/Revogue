@@ -8,6 +8,7 @@ import {
   ScrollView,
   Modal,
   TextInput,
+  Image,
 } from "react-native";
 import Entypo from "@expo/vector-icons/Entypo";
 import { router } from "expo-router";
@@ -19,6 +20,7 @@ import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
 import ProductListItem from "../../../../components/clothesBoxStore";
 import { addBarang } from "@/src/api/BarangCRUD";
+import * as ImagePicker from "expo-image-picker";
 
 const ProductModal = ({
   visible,
@@ -34,12 +36,16 @@ const ProductModal = ({
     Deskripsi: string;
     Harga: string;
     Stok: string;
+    Kategori: string;
+    Image: string;
   }) => void;
 }) => {
   const [namaBarang, setNamaBarang] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
   const [harga, setHarga] = useState("");
   const [stok, setStok] = useState("");
+  const [kategori, setKategori] = useState("");
+  const [image, setImage] = useState<string>("");
 
   useEffect(() => {
     if (userData) {
@@ -47,8 +53,23 @@ const ProductModal = ({
       setDeskripsi(userData.Deskripsi || "");
       setHarga(userData.Harga || "");
       setStok(userData.Stok || "");
+      setKategori(userData.Kategori || "");
     }
   }, [userData]);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      // Update profile image state
+      setImage(result.assets[0].uri);
+    }
+  };
 
   const handleAdd = () => {
     const product = {
@@ -56,6 +77,8 @@ const ProductModal = ({
       Deskripsi: deskripsi,
       Harga: harga,
       Stok: stok,
+      Kategori: kategori,
+      Image: image,
     };
     onSave(product);
     onClose();
@@ -63,7 +86,7 @@ const ProductModal = ({
 
   return (
     <Modal
-      animationType="slide"
+      animationType="none"
       transparent={true}
       visible={visible}
       onRequestClose={onClose}
@@ -74,7 +97,13 @@ const ProductModal = ({
             <Entypo name="cross" size={24} color="black" />
           </Pressable>
           <Text style={styles.modalTitle}>Add Your New Product</Text>
-
+          <Pressable onPress={pickImage} style={styles.imageContainer}>
+            {image ? (
+              <Image source={{ uri: image }} style={styles.image} />
+            ) : (
+              <Text style={styles.imageText}>Input your image</Text>
+            )}
+          </Pressable>
           <TextInput
             style={styles.input}
             placeholder="Nama Barang"
@@ -100,6 +129,12 @@ const ProductModal = ({
             value={stok}
             onChangeText={setStok}
             keyboardType="numeric"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Kategori"
+            value={kategori}
+            onChangeText={setKategori}
           />
 
           <View style={styles.buttonContainer}>
@@ -146,13 +181,15 @@ export default function UserStore() {
       Alert.alert("Error", "Failed to update user information.");
     }
   };
+
   const handleAddProduct = async (product: {
     NamaBarang: string;
     Deskripsi: string;
     Harga: string;
     Stok: string;
+    Kategori: string;
+    Image: string;
   }) => {
-    // Implementasi untuk menyimpan produk
     console.log("Product saved:", product);
     if (!userData) {
       Alert.alert("Error", "User data is not loaded yet.");
@@ -161,13 +198,16 @@ export default function UserStore() {
     // Implementasi untuk menyimpan produk
     try {
       // Panggil fungsi untuk menyimpan produk
-      // await addBarang(userData.Email,
-      //       product.NamaBarang,
-      //       product.Deskripsi,
-      //       product.Harga,
-      //       product.Stok,
-      //       userData.NamaToko,
-      //       userData.FotoToko,
+      await addBarang(
+        product.NamaBarang,
+        product.Kategori,
+        product.Deskripsi,
+        product.Harga,
+        product.Image,
+        product.Stok,
+        userData.NamaToko,
+        userData.Email,
+      )     
 
       console.log("Product saved successfully");
     } catch (error) {
@@ -327,6 +367,21 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 20,
     textAlign: "center",
+  },
+  image: { aspectRatio: 1, width: 180, height: 140 },
+  imageContainer: {
+    width: 200,
+    height: 160,
+    borderWidth: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: "auto",
+    marginBottom: 20,
+    borderRadius: 10,
+  },
+  imageText: {
+    textAlign: "center",
+    fontSize: 16,
   },
   input: {
     height: 40,

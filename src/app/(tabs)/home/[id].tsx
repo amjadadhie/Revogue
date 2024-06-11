@@ -38,16 +38,19 @@ const ProductDetailsScreen = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const barangData = (await readBarangByID(id)) as Barang;
-        setProduct(barangData);
+        if (id !== undefined) {
+          const numericId = parseInt(id, 10); // Convert id to number
+          const barangData = (await readBarangByID(numericId)) as Barang;
+          setProduct(barangData);
 
-        const tandaiData = await readTandai();
-        if (tandaiData) {
-          const likedItemsMap = tandaiData.reduce((acc, item) => {
-            acc[item.BarangID] = true;
-            return acc;
-          }, {} as { [key: string]: boolean });
-          setLikedItems(likedItemsMap);
+          const tandaiData = await readTandai();
+          if (tandaiData) {
+            const likedItemsMap = tandaiData.reduce((acc, item) => {
+              acc[item.BarangID] = true;
+              return acc;
+            }, {} as { [key: string]: boolean });
+            setLikedItems(likedItemsMap);
+          }
         }
       } catch (error) {
         console.error("Error fetching product:", error);
@@ -59,7 +62,7 @@ const ProductDetailsScreen = () => {
     fetchData();
   }, [id]);
 
-  const handleLike = async (id: string) => {
+  const handleLike = async (id: number) => {
     try {
       if (likedItems[id]) {
         await deleteTandai(id);
@@ -83,7 +86,7 @@ const ProductDetailsScreen = () => {
     try {
       if (id) {
         // Ensure id is defined
-        await addKeranjang(id, product?.Harga || 0);
+        await addKeranjang(parseInt(id), product?.Harga || 0);
         toggleModal();
         router.push("/cart");
         console.log(`Product: ${product?.NamaBarang}, Quantity: ${quantity}`);
