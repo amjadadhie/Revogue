@@ -33,17 +33,19 @@ const ProductModal = ({
   userData: any;
   onSave: (product: {
     NamaBarang: string;
-    Deskripsi: string;
-    Harga: string;
-    Stok: string;
     Kategori: string;
-    Image: string;
+    Harga: number;
+    Foto: string;
+    Deskripsi: string;
+    Stok: number;
+    NamaToko: string;
+    EmailPengguna: string;
   }) => void;
 }) => {
   const [namaBarang, setNamaBarang] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
-  const [harga, setHarga] = useState("");
-  const [stok, setStok] = useState("");
+  const [harga, setHarga] = useState<number>();
+  const [stok, setStok] = useState<number>();
   const [kategori, setKategori] = useState("");
   const [image, setImage] = useState<string>("");
 
@@ -51,8 +53,8 @@ const ProductModal = ({
     if (userData) {
       setNamaBarang(userData.NamaBarang || "");
       setDeskripsi(userData.Deskripsi || "");
-      setHarga(userData.Harga || "");
-      setStok(userData.Stok || "");
+      setHarga(userData.Harga || 0);
+      setStok(userData.Stok || 0);
       setKategori(userData.Kategori || "");
     }
   }, [userData]);
@@ -78,7 +80,9 @@ const ProductModal = ({
       Harga: harga,
       Stok: stok,
       Kategori: kategori,
-      Image: image,
+      Foto: image,
+      NamaToko: userData.NamaToko,
+      EmailPengguna: userData.Email,
     };
     onSave(product);
     onClose();
@@ -185,31 +189,35 @@ export default function UserStore() {
   const handleAddProduct = async (product: {
     NamaBarang: string;
     Deskripsi: string;
-    Harga: string;
-    Stok: string;
+    Harga: number;
+    Stok: number;
     Kategori: string;
     Image: string;
+    NamaToko: string;
+    EmailPengguna: string;
   }) => {
     console.log("Product saved:", product);
+  
     if (!userData) {
       Alert.alert("Error", "User data is not loaded yet.");
       return;
     }
-    // Implementasi untuk menyimpan produk
+  
     try {
-      // Panggil fungsi untuk menyimpan produk
+      // Call the addBarang function with the product details
       await addBarang(
         product.NamaBarang,
         product.Kategori,
-        product.Deskripsi,
         product.Harga,
-        product.Image,
+        product.Image, // Assuming this is the URL of the image
+        product.Deskripsi,
         product.Stok,
         userData.NamaToko,
-        userData.Email,
-      )     
-
+        userData.Email
+      );
+  
       console.log("Product saved successfully");
+      Alert.alert("Success", "Product added successfully.");
     } catch (error) {
       console.error("Error saving product:", error);
       Alert.alert("Error", "Failed to save product.");
