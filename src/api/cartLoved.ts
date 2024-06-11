@@ -87,7 +87,7 @@ export async function readTandai(): Promise<Tandai[] | void> {
     }
 }
 
-export async function addKeranjang(BarangID: string, Harga: number) {
+export async function addKeranjang(BarangID: number, Harga: number) {
     if (!auth.currentUser) {
         console.error('User not authenticated');
         return;
@@ -138,7 +138,7 @@ export async function addKeranjang(BarangID: string, Harga: number) {
     }
 }
 
-export async function addTandai(BarangID: string) {
+export async function addTandai(BarangID: number) {
     if (!auth.currentUser) {
       console.error('User not authenticated');
       return;
@@ -183,7 +183,7 @@ export async function addTandai(BarangID: string) {
     }
   }
 
-  export async function deleteTandai(BarangID: string) {
+  export async function deleteTandai(BarangID: number) {
     if (!auth.currentUser) {
       console.error('User not authenticated');
       return;
